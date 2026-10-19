@@ -1,0 +1,11 @@
+{
+  "devDependencies": {
+    "@types/google-apps-script": "^2.0.13",
+    "copyfiles": "^2.4.1",
+    "typescript": "^7.0.2"
+  },
+  "scripts": {
+    "build": "tsc && copyfiles -f src/appsscript.json dist",
+    "push": "npm run build && clasp push"
+  }
+}

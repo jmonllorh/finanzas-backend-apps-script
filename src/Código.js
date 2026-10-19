@@ -1,4 +1,4 @@
-function doGet(e) {
+function doGet2(e) {
   var spreadsheetId = "1OeaXm9POWakuXQc6yRH41gyydXI3J2YqhUczMC_2tSk";
   var ss = SpreadsheetApp.openById(spreadsheetId);
 
@@ -7,7 +7,7 @@ function doGet(e) {
 
   // Resto de tu lógica para parsear y devolver el JSON...
   var response = {
-    status: "otro",
+    status: "success",
     data: dataResumen
   };
 
