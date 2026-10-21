@@ -5,7 +5,9 @@
     "typescript": "^7.0.2"
   },
   "scripts": {
-    "build": "tsc && copyfiles -f src/appsscript.json dist",
-    "push": "npm run build && clasp push"
+    "clean": "node -e \"require('fs').rmSync('dist', { recursive: true, force: true })\"",
+    "build": "npm run clean && tsc && copyfiles -f src/appsscript.json dist",
+    "push": "npm run build && clasp push",
+    "deploy": "npm run push && clasp deploy --deploymentId AKfycbyLvfrjJwdN5yfjrMoYuRxex4Vf6he78nsPH3cJavNH3rw2Gu69mbGZRdhGOAIlADcjDA"
   }
 }

@@ -5,6 +5,7 @@ interface ApiResponse<T = any> {
   message?: string;
 }
 
+// TODO- Añadir campo unidad a los importes (€, %, kW, m3)
 /**
  * Función de entrada para peticiones HTTP GET.
  * @param e Objeto de evento HTTP proporcionado por Apps Script.
