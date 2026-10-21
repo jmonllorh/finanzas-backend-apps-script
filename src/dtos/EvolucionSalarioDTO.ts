@@ -1,8 +1,8 @@
 class EvolucionSalarioDTO {
   fecha!: Date;
-  salarioBrutoAnual!: number | null;
-  incrementoBrutoAnual!: number | null;
-  salarioNetoMensual!: number | null;
-  incrementoNetoMensual!: number | null;
+  salarioBrutoAnual!: ValorConUnidadDTO;
+  incrementoBrutoAnual!: ValorConUnidadDTO;
+  salarioNetoMensual!: ValorConUnidadDTO;
+  incrementoNetoMensual!: ValorConUnidadDTO;
   comentarios!: string | null;
 }

@@ -9,14 +9,14 @@ class ElectricidadAnualDTO {
 
 class ElectricidadDetalleDTO {
   mes!: MesDTO;
-  importe!: number | null;
-  consumo!: number | null;
+  importe!: ValorConUnidadDTO;
+  consumo!: ValorConUnidadDTO;
   precio!: ElectricidadPrecioDTO;
 }
 
 class ElectricidadPrecioDTO {
-  precioEnergia!: number | null;
-  precioPotenciaPunta!: number | null;
-  precioPotenciaValle!: number | null;
-  precioPotenciaTotal!: number | null;
+  precioEnergia!: ValorConUnidadDTO;
+  precioPotenciaPunta!: ValorConUnidadDTO;
+  precioPotenciaValle!: ValorConUnidadDTO;
+  precioPotenciaTotal!: ValorConUnidadDTO;
 }

@@ -7,9 +7,9 @@ class DesgloseTotalDTO {
 
 class DesgloseFinancieroDTO extends ResumenCamposFinancierosDTO {
   año!: number | null;
-  viajes!: number | null;
-  bonosAyudasRenta!: number | null;
-  ingresosTotales!: number | null;
+  viajes!: ValorConUnidadDTO;
+  bonosAyudasRenta!: ValorConUnidadDTO;
+  ingresosTotales!: ValorConUnidadDTO;
 }
 
 class ActivosDesglosadosDTO {
@@ -19,5 +19,5 @@ class ActivosDesglosadosDTO {
 
 class ActivoDesglosadoDTO {
   tipo!: TipoActivoDTO;
-  valor!: number | null;
+  valor!: ValorConUnidadDTO;
 }

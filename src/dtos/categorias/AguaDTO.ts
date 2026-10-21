@@ -9,7 +9,7 @@ class AguaAnualDTO {
 
 class AguaDetalleDTO {
   mes!: MesDTO;
-  importe!: number | null;
-  consumo!: number | null;
-  precioPorLitro!: number | null;
+  importe!: ValorConUnidadDTO;
+  consumo!: ValorConUnidadDTO;
+  precioPorLitro!: ValorConUnidadDTO;
 }

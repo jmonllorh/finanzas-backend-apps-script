@@ -6,44 +6,44 @@ class InversionesDTO {
 class RegistroFondoDTO {
   fondos!: RegistroMensualFondoDTO[];
   totales!: TotalesRegistroFondoDTO[];
-  colchonSeguridadVivienda!: number | null;
+  colchonSeguridadVivienda!: ValorConUnidadDTO;
 }
 
 class TotalesRegistroFondoDTO {
   tipo!: TipoActivoDTO;
-  valor!: number | null;
-  beneficio!: number | null;
-  ganancia!: number | null;
+  valor!: ValorConUnidadDTO;
+  beneficio!: ValorConUnidadDTO;
+  ganancia!: ValorConUnidadDTO;
 }
 
 class RegistroMensualFondoDTO {
   fecha!: Date;
   // Aquí se añadirá el agregado con los totales de la tabla
   activos!: ActivoFondoDTO[];
-  valorMaximoVivienda!: number | null;
+  valorMaximoVivienda!: ValorConUnidadDTO;
 }
 
 class ActivoFondoDTO {
   tipo!: TipoActivoDTO;
-  valor!: number | null;
-  aportado!: number | null;
-  beneficio!: number | null;
-  ganancia!: number | null;
+  valor!: ValorConUnidadDTO;
+  aportado!: ValorConUnidadDTO;
+  beneficio!: ValorConUnidadDTO;
+  ganancia!: ValorConUnidadDTO;
 }
 
 class RegistroDepositoDTO {
   depositos!: DepositoDTO[];
-  interesesTotales!: number | null;
-  importeTotalActivos!: number | null;
+  interesesTotales!: ValorConUnidadDTO;
+  importeTotalActivos!: ValorConUnidadDTO;
 }
 
 class DepositoDTO {
   entidad!: string;
-  importe!: number;
+  importe!: ValorConUnidadDTO;
   fechaInicio!: Date;
   fechaVencimiento!: Date;
-  tin!: number;
-  interesesBrutos!: number;
-  interesesNetos!: number;
+  tin!: ValorConUnidadDTO;
+  interesesBrutos!: ValorConUnidadDTO;
+  interesesNetos!: ValorConUnidadDTO;
   activo!: boolean;
 }

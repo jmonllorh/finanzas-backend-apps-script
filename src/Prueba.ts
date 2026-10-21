@@ -5,7 +5,6 @@ interface ApiResponse<T = any> {
   message?: string;
 }
 
-// TODO- Añadir campo unidad a los importes (€, %, kW, m3)
 /**
  * Función de entrada para peticiones HTTP GET.
  * @param e Objeto de evento HTTP proporcionado por Apps Script.
@@ -31,7 +30,7 @@ function doGet(e: GoogleAppsScript.Events.DoGet): GoogleAppsScript.Content.TextO
   const dataResumen: any[][] = sheetResumen.getDataRange().getValues();
 
   const response: ApiResponse<any[][]> = {
-    status: "success",
+    status: "error",
     data: dataResumen
   };
 

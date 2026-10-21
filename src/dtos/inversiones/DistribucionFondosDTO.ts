@@ -4,12 +4,12 @@ class DistribucionFondosDTO {
 
 class DistribucionFondoDTO {
   categoria!: CategoriaFondo | null;
-  fondo!: string | null;
-  peso!: number | null;
-  cantidadMensual!: number | null;
+  nombre!: string | null;
+  peso!: ValorConUnidadDTO;
+  cantidadMensual!: ValorConUnidadDTO;
   isin!: string | null;
   nombreTecnico!: string | null;
-  comision!: number | null;
+  comision!: ValorConUnidadDTO;
 }
 
 enum CategoriaFondo {
