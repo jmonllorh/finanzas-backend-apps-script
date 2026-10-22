@@ -3,6 +3,7 @@ interface ApiResponse<T = any> {
   status: 'success' | 'error';
   data?: T;
   message?: string;
+  evolucionSalarial?: EvolucionSalarioDTO[];
 }
 
 /**
@@ -26,12 +27,24 @@ function doGet(e: GoogleAppsScript.Events.DoGet): GoogleAppsScript.Content.TextO
       .setMimeType(ContentService.MimeType.JSON);
   }
 
-  // Obtiene los datos como una matriz bidimensional (any[][])
-  const dataResumen: any[][] = sheetResumen.getDataRange().getValues();
+  const sheetEvolucionSalario: GoogleAppsScript.Spreadsheet.Sheet | null =
+    ss.getSheetByName("Evolución salario");
+  if (!sheetEvolucionSalario) {
+    const errorResponse: ApiResponse = {
+      status: 'error',
+      message: 'No se encontró la hoja "Evolución salario"'
+    };
+
+    return ContentService
+      .createTextOutput(JSON.stringify(errorResponse))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+
+  const evolucionSalarial = crearEvolucionSalarioDTOs(sheetEvolucionSalario);
 
   const response: ApiResponse<any[][]> = {
-    status: "error",
-    data: dataResumen
+    status: "success",
+    evolucionSalarial
   };
 
   return ContentService

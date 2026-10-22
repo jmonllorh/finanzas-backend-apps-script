@@ -1,5 +1,5 @@
 class EvolucionSalarioDTO {
-  fecha!: Date;
+  fecha!: Date | null;
   salarioBrutoAnual!: ValorConUnidadDTO;
   incrementoBrutoAnual!: ValorConUnidadDTO;
   salarioNetoMensual!: ValorConUnidadDTO;
