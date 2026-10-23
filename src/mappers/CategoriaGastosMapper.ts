@@ -1,8 +1,3 @@
-interface ColumnaMesCategoriaGastos {
-  mes: MesValue;
-  indice: number;
-}
-
 function crearCategoriaGastosDTO(
   sheet: GoogleAppsScript.Spreadsheet.Sheet
 ): CategoriaGastosDTO[] {
@@ -18,8 +13,8 @@ function crearCategoriaGastosDTO(
   const result: CategoriaGastosDTO[] = [];
 
   for (let rowIndex = 0; rowIndex < rows.length; rowIndex++) {
-    const año = Utils.readNumber(rows[rowIndex][0]);
-    if (año === null || !Number.isInteger(año) || año < 1900) {
+    const año = Utils.readYear(rows[rowIndex][0]);
+    if (año === null) {
       continue;
     }
 
@@ -28,15 +23,11 @@ function crearCategoriaGastosDTO(
       throw new Error(`La hoja "${sheet.getName()}" no contiene los meses del año ${año}.`);
     }
 
-    const columnasMeses = crearColumnasMeses(monthHeaders);
+    const columnasMeses = Utils.createMonthColumns(monthHeaders, 0);
+    const endYearRowIndex = Utils.findNextYearRow(rows, rowIndex + 2);
     let totalRowIndex = -1;
 
-    for (let candidateIndex = rowIndex + 2; candidateIndex < rows.length; candidateIndex++) {
-      const candidateYear = Utils.readNumber(rows[candidateIndex][0]);
-      if (candidateYear !== null && Number.isInteger(candidateYear) && candidateYear >= 1900) {
-        break;
-      }
-
+    for (let candidateIndex = rowIndex + 2; candidateIndex < endYearRowIndex; candidateIndex++) {
       const firstCellFormula = formulas[candidateIndex]?.[0] ?? "";
       if (/^=SUM\(/i.test(firstCellFormula.trim())) {
         totalRowIndex = candidateIndex;
@@ -64,21 +55,9 @@ function crearCategoriaGastosDTO(
   return result;
 }
 
-function crearColumnasMeses(headers: unknown[]): ColumnaMesCategoriaGastos[] {
-  const mesesValidos: MesValue[] = Object.values(MesValue);
-  return mesesValidos.map((_, indice) => {
-    const header = Utils.readText(headers[indice]);
-    const mes = mesesValidos.find((mesValido) => mesValido === header);
-    if (!mes) {
-      throw new Error(`El mes de la columna ${indice + 1} no es válido.`);
-    }
-    return { mes, indice };
-  });
-}
-
 function crearCategoriaGastosDTODesdeFilas(
   año: number,
-  columnasMeses: ColumnaMesCategoriaGastos[],
+  columnasMeses: ColumnaMes[],
   filasGastos: unknown[][],
   notasGastos: string[][],
   filaTotales: unknown[],
@@ -89,30 +68,25 @@ function crearCategoriaGastosDTODesdeFilas(
   result.meses = columnasMeses.map(({ mes, indice }) => {
     const mesDTO = new GastosCategoriaMensualDTO();
     mesDTO.mes = mes;
-    const importes: (ValorWrapperDTO | null)[] = filasGastos.map(
-      (row, rowIndex) => {
-        const importe = Utils.readNumber(row[indice]);
-        if (importe === null) {
-          return null;
-        }
-
-        const nota = Utils.readText(notasGastos[rowIndex]?.[indice]);
-        return {
-          valor: importe,
-          unidad: UnidadValue.Euro,
-          ...(nota === null ? {} : { nota })
-        };
+    const importes: (ValorWrapperDTO | null)[] = filasGastos.map((row, rowIndex) => {
+      const importe = Utils.createValueWrapper(
+        row[indice],
+        notasGastos[rowIndex]?.[indice],
+        UnidadValue.Euro
+      );
+      if (importe.valor === null) {
+        return null;
       }
-    );
+      return importe;
+    });
     mesDTO.importes = importes.filter(
       (importe): importe is ValorWrapperDTO => importe !== null
     );
-    const notaTotal = Utils.readText(notasTotales[indice]);
-    mesDTO.total = {
-      valor: Utils.readNumber(filaTotales[indice]),
-      unidad: UnidadValue.Euro,
-      ...(notaTotal === null ? {} : { nota: notaTotal })
-    };
+    mesDTO.total = Utils.createValueWrapper(
+      filaTotales[indice],
+      notasTotales[indice],
+      UnidadValue.Euro
+    );
     return mesDTO;
   });
   return result;

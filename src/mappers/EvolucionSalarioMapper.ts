@@ -52,38 +52,40 @@ function crearEvolucionSalarioDTODesdeFila(
   columns: ColumnasEvolucionSalario
 ): EvolucionSalarioDTO {
   const fecha = Utils.readDate(row[columns.fecha]);
-  const salarioBrutoAnual = Utils.readNumber(row[columns.salarioBrutoAnual]);
-  const incrementoBrutoAnual = Utils.readNumber(row[columns.incrementoBrutoAnual]);
-  const salarioNetoMensual = Utils.readNumber(row[columns.salarioNetoMensual]);
-  const incrementoNetoMensual = Utils.readNumber(row[columns.incrementoNetoMensual]);
+  const salarioBrutoAnual = Utils.createValueWrapper(
+    row[columns.salarioBrutoAnual],
+    notas[columns.salarioBrutoAnual],
+    UnidadValue.Euro
+  );
+  const incrementoBrutoAnual = Utils.createValueWrapper(
+    row[columns.incrementoBrutoAnual],
+    notas[columns.incrementoBrutoAnual],
+    UnidadValue.Porcentaje
+  );
+  const salarioNetoMensual = Utils.createValueWrapper(
+    row[columns.salarioNetoMensual],
+    notas[columns.salarioNetoMensual],
+    UnidadValue.Euro
+  );
+  const incrementoNetoMensual = Utils.createValueWrapper(
+    row[columns.incrementoNetoMensual],
+    notas[columns.incrementoNetoMensual],
+    UnidadValue.Porcentaje
+  );
+  incrementoBrutoAnual.valor = incrementoBrutoAnual.valor === null
+    ? null
+    : incrementoBrutoAnual.valor * 100;
+  incrementoNetoMensual.valor = incrementoNetoMensual.valor === null
+    ? null
+    : incrementoNetoMensual.valor * 100;
   const comentarios = Utils.readText(row[columns.comentarios]);
-  const notaSalarioBrutoAnual = Utils.readText(notas[columns.salarioBrutoAnual]);
-  const notaIncrementoBrutoAnual = Utils.readText(notas[columns.incrementoBrutoAnual]);
-  const notaSalarioNetoMensual = Utils.readText(notas[columns.salarioNetoMensual]);
-  const notaIncrementoNetoMensual = Utils.readText(notas[columns.incrementoNetoMensual]);
 
   const dto = new EvolucionSalarioDTO();
   dto.fecha = fecha;
-  dto.salarioBrutoAnual = {
-    valor: salarioBrutoAnual,
-    unidad: UnidadValue.Euro,
-    ...(notaSalarioBrutoAnual === null ? {} : { nota: notaSalarioBrutoAnual })
-  };
-  dto.incrementoBrutoAnual = {
-    valor: incrementoBrutoAnual === null ? null : incrementoBrutoAnual * 100,
-    unidad: UnidadValue.Porcentaje,
-    ...(notaIncrementoBrutoAnual === null ? {} : { nota: notaIncrementoBrutoAnual })
-  };
-  dto.salarioNetoMensual = {
-    valor: salarioNetoMensual,
-    unidad: UnidadValue.Euro,
-    ...(notaSalarioNetoMensual === null ? {} : { nota: notaSalarioNetoMensual })
-  };
-  dto.incrementoNetoMensual = {
-    valor: incrementoNetoMensual === null ? null : incrementoNetoMensual * 100,
-    unidad: UnidadValue.Porcentaje,
-    ...(notaIncrementoNetoMensual === null ? {} : { nota: notaIncrementoNetoMensual })
-  };
+  dto.salarioBrutoAnual = salarioBrutoAnual;
+  dto.incrementoBrutoAnual = incrementoBrutoAnual;
+  dto.salarioNetoMensual = salarioNetoMensual;
+  dto.incrementoNetoMensual = incrementoNetoMensual;
   dto.comentarios = comentarios;
   return dto;
 }
