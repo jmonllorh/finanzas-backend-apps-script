@@ -64,9 +64,7 @@ function crearCategoriaGastosDTO(
   return result;
 }
 
-function crearColumnasMeses(
-  headers: unknown[]
-): ColumnaMesCategoriaGastos[] {
+function crearColumnasMeses(headers: unknown[]): ColumnaMesCategoriaGastos[] {
   const mesesValidos: MesValue[] = Object.values(MesValue);
   return mesesValidos.map((_, indice) => {
     const header = Utils.readText(headers[indice]);

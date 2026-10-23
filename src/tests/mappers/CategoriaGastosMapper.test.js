@@ -34,18 +34,22 @@ class CategoriaGastosMapperTests {
 }
 
 const mapperTests = new CategoriaGastosMapperTests();
+const months = [
+  "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
+  "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
+];
 
 test("CategoriaGastosMapperTests - construye DTOs por año con importes mensuales", () => {
   const emptyRow = () => Array(12).fill("");
   const rows = [
     [2026, ...Array(11).fill("")],
-    ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"],
+    months,
     [10, 20, ...Array(10).fill("")],
     [5, ...Array(11).fill("")],
     [15, 20, ...Array(10).fill("")],
     emptyRow(),
     [2025, ...Array(11).fill("")],
-    ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"],
+    months,
     [7, ...Array(11).fill("")],
     [7, ...Array(11).fill("")]
   ];

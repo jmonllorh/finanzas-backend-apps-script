@@ -1,17 +1,21 @@
 interface ApiResponse {
   status: 'success' | 'error';
   message?: string;
+  // TODO- Rellenar
   resumenesAnuales?: ResumenAnualDTO[];
   comidaLimpieza?: CategoriaGastosDTO[] | null;
   ocio?: CategoriaGastosDTO[] | null;
   deporte?: CategoriaGastosDTO[] | null;
   transporte?: CategoriaGastosDTO[] | null;
   otros?: CategoriaGastosDTO[] | null;
-  electricidad?: ElectricidadDTO[];
-  agua?: AguaDTO[];
+  electricidad?: ElectricidadDTO[] | null;
+  agua?: AguaDTO[] | null;
   viajes?: ViajesDTO[];
+  // TODO- Rellenar
   inversiones?: InversionesDTO;
+  // TODO- Rellenar
   distribucionFondos?: DistribucionFondoDTO[];
+  // TODO- Rellenar
   desgloseTotal?: DesgloseTotalDTO;
   evolucionSalarial?: EvolucionSalarioDTO[] | null;
 }
@@ -31,6 +35,8 @@ function doGet(e: GoogleAppsScript.Events.DoGet): GoogleAppsScript.Content.TextO
   const sheetDeporte = ss.getSheetByName("Deporte");
   const sheetTransporte = ss.getSheetByName("Transporte");
   const sheetOtros = ss.getSheetByName("Otros");
+  const sheetElectricidad = ss.getSheetByName("Electricidad");
+  const sheetAgua = ss.getSheetByName("Agua");
 
   const response: ApiResponse = {
     status: "success",
@@ -51,6 +57,12 @@ function doGet(e: GoogleAppsScript.Events.DoGet): GoogleAppsScript.Content.TextO
       : null,
     otros: sheetOtros
       ? crearCategoriaGastosDTO(sheetOtros)
+      : null,
+    electricidad: sheetElectricidad
+      ? crearElectricidadDTO(sheetElectricidad)
+      : null,
+    agua: sheetAgua
+      ? crearAguaDTO(sheetAgua)
       : null
   };
 
