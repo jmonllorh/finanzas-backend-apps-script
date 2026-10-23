@@ -6,7 +6,7 @@ class ResumenAnualDTO {
 }
 
 class ResumenMensualDTO extends ResumenCamposFinancierosDTO {
-  mes!: MesDTO;
+  mes!: MesValue;
 }
 
 class TotalAnualDTO extends ResumenCamposFinancierosDTO {

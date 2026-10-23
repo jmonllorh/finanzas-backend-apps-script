@@ -10,7 +10,7 @@ class RegistroFondoDTO {
 }
 
 class TotalesRegistroFondoDTO {
-  tipo!: TipoActivoDTO;
+  tipo!: TipoActivoValue;
   valor!: ValorConUnidadDTO;
   beneficio!: ValorConUnidadDTO;
   ganancia!: ValorConUnidadDTO;
@@ -24,7 +24,7 @@ class RegistroMensualFondoDTO {
 }
 
 class ActivoFondoDTO {
-  tipo!: TipoActivoDTO;
+  tipo!: TipoActivoValue;
   valor!: ValorConUnidadDTO;
   aportado!: ValorConUnidadDTO;
   beneficio!: ValorConUnidadDTO;

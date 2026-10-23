@@ -16,14 +16,7 @@ function crearEvolucionSalarioDTOs(
   }
 
   const headers = rows[0].map((value) => String(value).trim());
-  const columns: ColumnasEvolucionSalario = {
-    fecha: Utils.findColumn(headers, "Fecha"),
-    salarioBrutoAnual: Utils.findColumn(headers, "Salario bruto anual"),
-    incrementoBrutoAnual: Utils.findColumn(headers, "Incremento bruto anual"),
-    salarioNetoMensual: Utils.findColumn(headers, "Salario neto mensual"),
-    incrementoNetoMensual: Utils.findColumn(headers, "Incremento neto mensual"),
-    comentarios: Utils.findColumn(headers, "Comentarios")
-  };
+  const columns = crearColumnasEvolucionSalario(headers);
 
   const result: EvolucionSalarioDTO[] = [];
   for (let rowIndex = 1; rowIndex < rows.length; rowIndex++) {
@@ -36,6 +29,19 @@ function crearEvolucionSalarioDTOs(
   }
 
   return result;
+}
+
+function crearColumnasEvolucionSalario(
+  headers: string[]
+): ColumnasEvolucionSalario {
+  return {
+    fecha: Utils.findColumn(headers, "Fecha"),
+    salarioBrutoAnual: Utils.findColumn(headers, "Salario bruto anual"),
+    incrementoBrutoAnual: Utils.findColumn(headers, "Incremento bruto anual"),
+    salarioNetoMensual: Utils.findColumn(headers, "Salario neto mensual"),
+    incrementoNetoMensual: Utils.findColumn(headers, "Incremento neto mensual"),
+    comentarios: Utils.findColumn(headers, "Comentarios")
+  };
 }
 
 function crearEvolucionSalarioDTODesdeFila(
@@ -51,15 +57,15 @@ function crearEvolucionSalarioDTODesdeFila(
 
   const dto = new EvolucionSalarioDTO();
   dto.fecha = fecha;
-  dto.salarioBrutoAnual = { valor: salarioBrutoAnual, unidad: UnidadDTO.Euro };
+  dto.salarioBrutoAnual = { valor: salarioBrutoAnual, unidad: UnidadValue.Euro };
   dto.incrementoBrutoAnual = {
     valor: incrementoBrutoAnual === null ? null : incrementoBrutoAnual * 100,
-    unidad: UnidadDTO.Porcentaje
+    unidad: UnidadValue.Porcentaje
   };
-  dto.salarioNetoMensual = { valor: salarioNetoMensual, unidad: UnidadDTO.Euro };
+  dto.salarioNetoMensual = { valor: salarioNetoMensual, unidad: UnidadValue.Euro };
   dto.incrementoNetoMensual = {
     valor: incrementoNetoMensual === null ? null : incrementoNetoMensual * 100,
-    unidad: UnidadDTO.Porcentaje
+    unidad: UnidadValue.Porcentaje
   };
   dto.comentarios = comentarios;
   return dto;

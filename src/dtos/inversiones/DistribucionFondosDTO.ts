@@ -1,7 +1,3 @@
-class DistribucionFondosDTO {
-  fondos!: DistribucionFondoDTO[];
-}
-
 class DistribucionFondoDTO {
   categoria!: CategoriaFondo | null;
   nombre!: string | null;

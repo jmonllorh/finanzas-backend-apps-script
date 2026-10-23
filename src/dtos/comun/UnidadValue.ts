@@ -1,4 +1,4 @@
-enum UnidadDTO {
+enum UnidadValue {
   Euro = "€",
   Porcentaje = "%",
   Kilovatio = "kW",

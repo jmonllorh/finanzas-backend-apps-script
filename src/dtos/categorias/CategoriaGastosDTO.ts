@@ -1,14 +1,10 @@
 class CategoriaGastosDTO {
-  años!: GastosCategoriaAnualDTO[];
-}
-
-class GastosCategoriaAnualDTO {
   año!: number;
   meses!: GastosCategoriaMensualDTO[];
 }
 
 class GastosCategoriaMensualDTO {
-  mes!: MesDTO;
+  mes!: MesValue;
   importes!: ValorConUnidadDTO[];
   total!: ValorConUnidadDTO;
 }

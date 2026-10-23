@@ -8,7 +8,7 @@ class EvolucionSalarioMapperTests {
   constructor() {
     this.context = vm.createContext({});
     const compiledFiles = [
-      "../../../dist/dtos/comun/UnidadDTO.js",
+      "../../../dist/dtos/comun/UnidadValue.js",
       "../../../dist/dtos/EvolucionSalarioDTO.js",
       "../../../dist/utils/Utils.js",
       "../../../dist/mappers/EvolucionSalarioMapper.js"

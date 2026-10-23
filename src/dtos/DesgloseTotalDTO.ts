@@ -18,6 +18,6 @@ class ActivosDesglosadosDTO {
 }
 
 class ActivoDesglosadoDTO {
-  tipo!: TipoActivoDTO;
+  tipo!: TipoActivoValue;
   valor!: ValorConUnidadDTO;
 }

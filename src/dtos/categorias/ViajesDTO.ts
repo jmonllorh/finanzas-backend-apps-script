@@ -1,8 +1,4 @@
 class ViajesDTO {
-  años!: ViajesAnualesDTO[];
-}
-
-class ViajesAnualesDTO {
   año!: number;
   viajes!: ViajeDTO[];
   total!: ValorConUnidadDTO;

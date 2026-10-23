@@ -1,15 +1,15 @@
 class RespuestaFinancieraDTO {
   resumenesAnuales!: ResumenAnualDTO[];
-  comidaLimpieza!: CategoriaGastosDTO;
-  ocio!: CategoriaGastosDTO;
-  deporte!: CategoriaGastosDTO;
-  transporte!: CategoriaGastosDTO;
-  otros!: CategoriaGastosDTO;
-  electricidad!: ElectricidadDTO;
-  agua!: AguaDTO;
-  viajes!: ViajesDTO;
+  comidaLimpieza!: CategoriaGastosDTO[];
+  ocio!: CategoriaGastosDTO[];
+  deporte!: CategoriaGastosDTO[];
+  transporte!: CategoriaGastosDTO[];
+  otros!: CategoriaGastosDTO[];
+  electricidad!: ElectricidadDTO[];
+  agua!: AguaDTO[];
+  viajes!: ViajesDTO[];
   inversiones!: InversionesDTO;
-  distribucionFondos!: DistribucionFondosDTO;
+  distribucionFondos!: DistribucionFondoDTO[];
   desgloseTotal!: DesgloseTotalDTO;
   evolucionSalarial!: EvolucionSalarioDTO[];
 }

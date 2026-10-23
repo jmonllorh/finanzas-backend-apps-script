@@ -1,4 +1,4 @@
-enum TipoActivoDTO {
+enum TipoActivoValue {
   Bancos = "Bancos",
   Depositos = "Depósitos",
   RentaVariable = "Renta variable",
