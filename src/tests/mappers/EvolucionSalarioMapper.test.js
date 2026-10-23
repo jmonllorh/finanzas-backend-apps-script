@@ -19,11 +19,12 @@ class EvolucionSalarioMapperTests {
     }
   }
 
-  mapRow(row, columns) {
+  mapRow(row, columns, notes) {
     this.context.row = row;
     this.context.columns = columns;
+    this.context.notes = notes;
     return vm.runInContext(
-      "crearEvolucionSalarioDTODesdeFila(row, columns)",
+      "crearEvolucionSalarioDTODesdeFila(row, notes, columns)",
       this.context
     );
   }
@@ -42,13 +43,14 @@ test("EvolucionSalarioMapperTests - rellena un DTO desde una fila aislada", () =
       salarioNetoMensual: 3,
       incrementoNetoMensual: 4,
       comentarios: 5
-    }
+    },
+    ["", "Nota del salario bruto", "", "", "", ""]
   );
 
   assert.equal(dto.fecha.toISOString(), "2024-10-20T00:00:00.000Z");
   assert.deepEqual(
     JSON.parse(JSON.stringify(dto.salarioBrutoAnual)),
-    { valor: 48000, unidad: "€" }
+    { valor: 48000, unidad: "€", nota: "Nota del salario bruto" }
   );
   assert.deepEqual(
     JSON.parse(JSON.stringify(dto.incrementoBrutoAnual)),

@@ -20,12 +20,13 @@ class CategoriaGastosMapperTests {
     }
   }
 
-  mapSheet(rows, formulas) {
+  mapSheet(rows, formulas, notes) {
     this.context.sheet = {
       getName: () => "Ocio",
       getDataRange: () => ({
         getValues: () => rows,
-        getFormulas: () => formulas
+        getFormulas: () => formulas,
+        getNotes: () => notes
       })
     };
     return vm.runInContext("crearCategoriaGastosDTO(sheet)", this.context);
@@ -51,8 +52,11 @@ test("CategoriaGastosMapperTests - construye DTOs por año con importes mensuale
   const formulas = rows.map(() => Array(12).fill(""));
   formulas[4][0] = "=SUM(A3:A4)";
   formulas[9][0] = "=SUM(A8:A8)";
+  const notes = rows.map(() => Array(12).fill(""));
+  notes[2][0] = "Nota del primer importe";
+  notes[4][0] = "Nota del total";
 
-  const dto = mapperTests.mapSheet(rows, formulas);
+  const dto = mapperTests.mapSheet(rows, formulas, notes);
 
   assert.equal(dto.length, 2);
   assert.equal(dto[0].año, 2026);
@@ -61,10 +65,10 @@ test("CategoriaGastosMapperTests - construye DTOs por año con importes mensuale
     {
       mes: "Enero",
       importes: [
-        { valor: 10, unidad: "€" },
+        { valor: 10, unidad: "€", nota: "Nota del primer importe" },
         { valor: 5, unidad: "€" }
       ],
-      total: { valor: 15, unidad: "€" }
+      total: { valor: 15, unidad: "€", nota: "Nota del total" }
     }
   );
   assert.deepEqual(

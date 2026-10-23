@@ -5,6 +5,6 @@ class CategoriaGastosDTO {
 
 class GastosCategoriaMensualDTO {
   mes!: MesValue;
-  importes!: ValorConUnidadDTO[];
-  total!: ValorConUnidadDTO;
+  importes!: ValorWrapperDTO[];
+  total!: ValorWrapperDTO;
 }

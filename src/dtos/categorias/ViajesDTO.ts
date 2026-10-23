@@ -1,16 +1,16 @@
 class ViajesDTO {
   año!: number;
   viajes!: ViajeDTO[];
-  total!: ValorConUnidadDTO;
+  total!: ValorWrapperDTO;
 }
 
 class ViajeDTO {
   nombre!: string;
   gastos!: GastoViajeDTO[];
-  total!: ValorConUnidadDTO;
+  total!: ValorWrapperDTO;
 }
 
 class GastoViajeDTO {
-  importe!: ValorConUnidadDTO;
+  importe!: ValorWrapperDTO;
   comentario!: string | null;
 }

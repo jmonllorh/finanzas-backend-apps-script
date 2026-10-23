@@ -20,8 +20,6 @@ interface ApiResponse {
  * Función de entrada para peticiones HTTP GET.
  * @param e Objeto de evento HTTP proporcionado por Apps Script.
  */
-// TODO- Renombrar a Main
-// TODO- Añadir a todos los campos campo opcional con la nota de la celda
 function doGet(e: GoogleAppsScript.Events.DoGet): GoogleAppsScript.Content.TextOutput {
   const spreadsheetId: string = "1OeaXm9POWakuXQc6yRH41gyydXI3J2YqhUczMC_2tSk";
 

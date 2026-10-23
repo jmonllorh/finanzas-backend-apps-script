@@ -10,6 +10,6 @@ class ResumenMensualDTO extends ResumenCamposFinancierosDTO {
 }
 
 class TotalAnualDTO extends ResumenCamposFinancierosDTO {
-  viajes!: ValorConUnidadDTO;
-  bonosAyudasRenta!: ValorConUnidadDTO;
+  viajes!: ValorWrapperDTO;
+  bonosAyudasRenta!: ValorWrapperDTO;
 }

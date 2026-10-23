@@ -5,14 +5,14 @@ class ElectricidadDTO {
 
 class ElectricidadDetalleDTO {
   mes!: MesValue;
-  importe!: ValorConUnidadDTO;
-  consumo!: ValorConUnidadDTO;
+  importe!: ValorWrapperDTO;
+  consumo!: ValorWrapperDTO;
   precio!: ElectricidadPrecioDTO;
 }
 
 class ElectricidadPrecioDTO {
-  precioEnergia!: ValorConUnidadDTO;
-  precioPotenciaPunta!: ValorConUnidadDTO;
-  precioPotenciaValle!: ValorConUnidadDTO;
-  precioPotenciaTotal!: ValorConUnidadDTO;
+  precioEnergia!: ValorWrapperDTO;
+  precioPotenciaPunta!: ValorWrapperDTO;
+  precioPotenciaValle!: ValorWrapperDTO;
+  precioPotenciaTotal!: ValorWrapperDTO;
 }

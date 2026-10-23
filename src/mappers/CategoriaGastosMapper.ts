@@ -9,6 +9,7 @@ function crearCategoriaGastosDTO(
   const range = sheet.getDataRange();
   const rows: unknown[][] = range.getValues();
   const formulas: string[][] = range.getFormulas();
+  const notes: string[][] = range.getNotes();
 
   if (rows.length === 0) {
     throw new Error(`La hoja "${sheet.getName()}" no contiene datos.`);
@@ -52,7 +53,9 @@ function crearCategoriaGastosDTO(
         año,
         columnasMeses,
         rows.slice(rowIndex + 2, totalRowIndex),
-        rows[totalRowIndex]
+        notes.slice(rowIndex + 2, totalRowIndex),
+        rows[totalRowIndex],
+        notes[totalRowIndex]
       )
     );
     rowIndex = totalRowIndex;
@@ -79,20 +82,38 @@ function crearCategoriaGastosDTODesdeFilas(
   año: number,
   columnasMeses: ColumnaMesCategoriaGastos[],
   filasGastos: unknown[][],
-  filaTotales: unknown[]
+  notasGastos: string[][],
+  filaTotales: unknown[],
+  notasTotales: string[]
 ): CategoriaGastosDTO {
   const result = new CategoriaGastosDTO();
   result.año = año;
   result.meses = columnasMeses.map(({ mes, indice }) => {
     const mesDTO = new GastosCategoriaMensualDTO();
     mesDTO.mes = mes;
-    mesDTO.importes = filasGastos
-      .map((row) => Utils.readNumber(row[indice]))
-      .filter((importe): importe is number => importe !== null)
-      .map((importe) => ({ valor: importe, unidad: UnidadValue.Euro }));
+    const importes: (ValorWrapperDTO | null)[] = filasGastos.map(
+      (row, rowIndex) => {
+        const importe = Utils.readNumber(row[indice]);
+        if (importe === null) {
+          return null;
+        }
+
+        const nota = Utils.readText(notasGastos[rowIndex]?.[indice]);
+        return {
+          valor: importe,
+          unidad: UnidadValue.Euro,
+          ...(nota === null ? {} : { nota })
+        };
+      }
+    );
+    mesDTO.importes = importes.filter(
+      (importe): importe is ValorWrapperDTO => importe !== null
+    );
+    const notaTotal = Utils.readText(notasTotales[indice]);
     mesDTO.total = {
       valor: Utils.readNumber(filaTotales[indice]),
-      unidad: UnidadValue.Euro
+      unidad: UnidadValue.Euro,
+      ...(notaTotal === null ? {} : { nota: notaTotal })
     };
     return mesDTO;
   });
