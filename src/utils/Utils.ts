@@ -16,10 +16,19 @@ class Utils {
   }
 
   /**
-   * Convierte números o cadenas numéricas a number.
+   * Convierte números o cadenas numéricas a number y los redondea a dos decimales.
    * Devuelve null para celdas vacías, valores no numéricos o números no finitos.
    */
   static readNumber(value: unknown): number | null {
+    const number = Utils.parseNumber(value);
+    return number === null ? null : Utils.roundToTwoDecimals(number);
+  }
+
+  /**
+   * Convierte números o cadenas numéricas sin redondear.
+   * Devuelve null para celdas vacías, valores no numéricos o números no finitos.
+   */
+  private static parseNumber(value: unknown): number | null {
     if (value === null || (typeof value === "string" && value.trim() === "")) {
       return null;
     }
@@ -29,6 +38,14 @@ class Utils {
         ? Number(value)
         : Number.NaN;
     return Number.isFinite(number) ? number : null;
+  }
+
+  /**
+   * Redondea al centésimo más cercano y evita errores binarios en los casos límite.
+   */
+  private static roundToTwoDecimals(value: number): number {
+    const sign = Math.sign(value);
+    return sign * Math.round((Math.abs(value) + Number.EPSILON) * 100) / 100;
   }
 
   /**
@@ -108,30 +125,35 @@ class Utils {
   }
 
   /**
-   * Construye el wrapper de un valor numérico, convirtiendo entradas inválidas a null.
-   * Añade la unidad indicada y solo incluye nota cuando la celda contiene texto.
+   * Lee el valor numérico y su nota, devolviendo undefined para notas vacías
+   * para que puedan omitirse al serializar el DTO.
    */
-  static createValueWrapper(
+  static readValueAndNote(
     value: unknown,
     note: unknown,
-    unit: UnidadValue
-  ): RegistroWrapperDTO {
+    roundToTwoDecimals = true
+  ): [number | null, string | undefined] {
     const textNote = Utils.readText(note);
-    return {
-      valor: Utils.readNumber(value),
-      unidad: unit,
-      ...(textNote === null ? {} : { nota: textNote })
-    };
+    const number = roundToTwoDecimals
+      ? Utils.readNumber(value)
+      : Utils.parseNumber(value);
+    return [number, textNote ?? undefined];
   }
 
   /**
-   * Crea un wrapper porcentual multiplicando por 100 los valores numéricos de entrada.
-   * Si el valor no es válido, conserva null; la nota se procesa como en createValueWrapper.
+   * Convierte una fracción a porcentaje y conserva la nota; los valores no válidos
+   * siguen siendo null.
    */
-  static createPercentageWrapper(value: unknown, note: unknown): RegistroWrapperDTO {
-    const result = Utils.createValueWrapper(value, note, UnidadValue.Porcentaje);
-    result.valor = result.valor === null ? null : result.valor * 100;
-    return result;
+  static readPercentageAndNote(
+    value: unknown,
+    note: unknown
+  ): [number | null, string | undefined] {
+    const percentage = Utils.parseNumber(value);
+    const textNote = Utils.readText(note);
+    return [
+      percentage === null ? null : Utils.roundToTwoDecimals(percentage * 100),
+      textNote ?? undefined
+    ];
   }
 
   /**

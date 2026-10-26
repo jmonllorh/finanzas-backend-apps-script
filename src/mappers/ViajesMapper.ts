@@ -41,10 +41,9 @@ function crearViajesDTO(
       columnas,
       totalRowIndex
     );
-    dto.total = Utils.createValueWrapper(
+    [dto.total, dto.notaTotal] = Utils.readValueAndNote(
       rows[totalRowIndex][columnas.total],
-      notes[totalRowIndex]?.[columnas.total],
-      UnidadValue.Euro
+      notes[totalRowIndex]?.[columnas.total]
     );
     result.push(dto);
   }
@@ -135,21 +134,19 @@ function crearViajesDelAño(
       viajeActual = new ViajeDTO();
       viajeActual.nombre = nombre;
       viajeActual.gastos = [];
-      viajeActual.total = Utils.createValueWrapper(
+      [viajeActual.total, viajeActual.notaTotal] = Utils.readValueAndNote(
         row[columnas.total],
-        notes[rowIndex]?.[columnas.total],
-        UnidadValue.Euro
+        notes[rowIndex]?.[columnas.total]
       );
       result.push(viajeActual);
     }
 
-    const importe = Utils.createValueWrapper(
+    const [importe, notaImporte] = Utils.readValueAndNote(
       row[columnas.importe],
-      notes[rowIndex]?.[columnas.importe],
-      UnidadValue.Euro
+      notes[rowIndex]?.[columnas.importe]
     );
     const comentario = Utils.readText(row[columnas.comentario]);
-    if (importe.valor === null && comentario === null) {
+    if (importe === null && comentario === null) {
       continue;
     }
     if (viajeActual === null) {
@@ -160,6 +157,7 @@ function crearViajesDelAño(
 
     const gasto = new GastoViajeDTO();
     gasto.importe = importe;
+    gasto.notaImporte = notaImporte;
     gasto.comentario = comentario;
     viajeActual.gastos.push(gasto);
   }

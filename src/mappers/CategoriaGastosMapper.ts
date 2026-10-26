@@ -76,24 +76,25 @@ function crearCategoriaGastosDTODesdeFilas(
   result.meses = columnasMeses.map(({ mes, indice }) => {
     const mesDTO = new GastosCategoriaMensualDTO();
     mesDTO.mes = mes;
-    const importes: (RegistroWrapperDTO | null)[] = filasGastos.map((row, rowIndex) => {
-      const importe = Utils.createValueWrapper(
+    const importes: (ImporteCategoriaDTO | null)[] = filasGastos.map((row, rowIndex) => {
+      const [valor, nota] = Utils.readValueAndNote(
         row[indice],
-        notasGastos[rowIndex]?.[indice],
-        UnidadValue.Euro
+        notasGastos[rowIndex]?.[indice]
       );
-      if (importe.valor === null) {
+      if (valor === null) {
         return null;
       }
+      const importe = new ImporteCategoriaDTO();
+      importe.valor = valor;
+      importe.nota = nota;
       return importe;
     });
     mesDTO.importes = importes.filter(
-      (importe): importe is RegistroWrapperDTO => importe !== null
+      (importe): importe is ImporteCategoriaDTO => importe !== null
     );
-    mesDTO.total = Utils.createValueWrapper(
+    [mesDTO.total, mesDTO.notaTotal] = Utils.readValueAndNote(
       filaTotales[indice],
-      notasTotales[indice],
-      UnidadValue.Euro
+      notasTotales[indice]
     );
     return mesDTO;
   });

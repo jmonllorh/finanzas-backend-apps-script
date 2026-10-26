@@ -8,8 +8,6 @@ class ViajesMapperTests {
   constructor() {
     this.context = vm.createContext({});
     const compiledFiles = [
-      "../../../dist/dtos/comun/UnidadValue.js",
-      "../../../dist/dtos/comun/RegistroWrapperDTO.js",
       "../../../dist/dtos/categorias/ViajesDTO.js",
       "../../../dist/utils/Utils.js",
       "../../../dist/mappers/ViajesMapper.js"
@@ -68,28 +66,29 @@ test("ViajesMapperTests - mapea años, viajes, gastos y totales", () => {
           nombre: "Málaga y Granada",
           gastos: [
             {
-              importe: { valor: 161.6, unidad: "€", nota: "Importe original" },
+              importe: 161.6,
+              notaImporte: "Importe original",
               comentario: "Alojamiento"
             },
             {
-              importe: { valor: 132.8, unidad: "€" },
+              importe: 132.8,
               comentario: "Gastos varios"
             },
             {
-              importe: { valor: 30, unidad: "€" },
+              importe: 30,
               comentario: "Gasolina"
             }
           ],
-          total: { valor: 324.4, unidad: "€" }
+          total: 324.4
         }
       ],
-      total: { valor: 324.4, unidad: "€" }
+      total: 324.4
     }
   );
   assert.equal(dtos[1].año, 2022);
   assert.equal(dtos[1].viajes[0].nombre, "Córdoba");
   assert.equal(dtos[1].viajes[0].gastos.length, 5);
-  assert.equal(dtos[1].viajes[0].gastos[3].importe.valor, 126.3);
-  assert.equal(dtos[1].viajes[0].total.valor, 319.3);
-  assert.equal(dtos[1].total.valor, 319.3);
+  assert.equal(dtos[1].viajes[0].gastos[3].importe, 126.3);
+  assert.equal(dtos[1].viajes[0].total, 319.3);
+  assert.equal(dtos[1].total, 319.3);
 });

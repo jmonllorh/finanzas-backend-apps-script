@@ -41,36 +41,34 @@ function crearElectricidadDTO(
     dto.meses = columnasMeses.map(({ mes, indice }) => {
       const mesDTO = new ElectricidadDetalleDTO();
       mesDTO.mes = mes;
-      mesDTO.importe = Utils.createValueWrapper(
+      [mesDTO.importe, mesDTO.notaImporte] = Utils.readValueAndNote(
         rows[filas.importe][indice],
-        notes[filas.importe]?.[indice],
-        UnidadValue.Euro
+        notes[filas.importe]?.[indice]
       );
-      mesDTO.consumo = Utils.createValueWrapper(
+      [mesDTO.consumo, mesDTO.notaConsumo] = Utils.readValueAndNote(
         rows[filas.consumo][indice],
-        notes[filas.consumo]?.[indice],
-        UnidadValue.Kilovatio
+        notes[filas.consumo]?.[indice]
       );
       const precio = new ElectricidadPrecioDTO();
-      precio.precioEnergia = Utils.createValueWrapper(
+      [precio.precioEnergia, precio.notaPrecioEnergia] = Utils.readValueAndNote(
         rows[filas.precioEnergia][indice],
         notes[filas.precioEnergia]?.[indice],
-        UnidadValue.EuroPorKilovatio
+        false
       );
-      precio.precioPotenciaPunta = Utils.createValueWrapper(
+      [precio.precioPotenciaPunta, precio.notaPrecioPotenciaPunta] = Utils.readValueAndNote(
         rows[filas.precioPotenciaPunta][indice],
         notes[filas.precioPotenciaPunta]?.[indice],
-        UnidadValue.EuroPorKilovatio
+        false
       );
-      precio.precioPotenciaValle = Utils.createValueWrapper(
+      [precio.precioPotenciaValle, precio.notaPrecioPotenciaValle] = Utils.readValueAndNote(
         rows[filas.precioPotenciaValle][indice],
         notes[filas.precioPotenciaValle]?.[indice],
-        UnidadValue.EuroPorKilovatio
+        false
       );
-      precio.precioPotenciaTotal = Utils.createValueWrapper(
+      [precio.precioPotenciaTotal, precio.notaPrecioPotenciaTotal] = Utils.readValueAndNote(
         rows[filas.precioPotenciaTotal][indice],
         notes[filas.precioPotenciaTotal]?.[indice],
-        UnidadValue.EuroPorKilovatio
+        false
       );
       mesDTO.precio = precio;
       return mesDTO;

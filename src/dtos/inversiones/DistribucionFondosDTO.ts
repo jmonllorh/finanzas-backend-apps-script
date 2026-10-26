@@ -1,11 +1,14 @@
 class DistribucionFondoDTO {
   categoria!: CategoriaFondo | null;
   nombre!: string | null;
-  peso!: RegistroWrapperDTO;
-  cantidadMensual!: RegistroWrapperDTO;
+  peso!: number | null;
+  notaPeso?: string;
+  cantidadMensual!: number | null;
+  notaCantidadMensual?: string;
   isin!: string | null;
   nombreTecnico!: string | null;
-  comision!: RegistroWrapperDTO;
+  comision!: number | null;
+  notaComision?: string;
 }
 
 enum CategoriaFondo {

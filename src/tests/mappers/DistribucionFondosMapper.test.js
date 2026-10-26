@@ -8,8 +8,6 @@ class DistribucionFondosMapperTests {
   constructor() {
     this.context = vm.createContext({});
     const compiledFiles = [
-      "../../../dist/dtos/comun/UnidadValue.js",
-      "../../../dist/dtos/comun/RegistroWrapperDTO.js",
       "../../../dist/dtos/inversiones/DistribucionFondosDTO.js",
       "../../../dist/utils/Utils.js",
       "../../../dist/mappers/DistribucionFondosMapper.js"
@@ -59,17 +57,18 @@ test("DistribucionFondosMapperTests - asigna categorías y normaliza porcentajes
     {
       categoria: "Fondos indexados",
       nombre: "Fondo global",
-      peso: { valor: 60, unidad: "%", nota: "Peso configurado" },
-      cantidadMensual: { valor: 900, unidad: "€" },
+      peso: 60,
+      notaPeso: "Peso configurado",
+      cantidadMensual: 900,
       isin: "IE0000000001",
       nombreTecnico: "Global técnico",
-      comision: { valor: 0.18, unidad: "%" }
+      comision: 0.18
     }
   );
   assert.equal(dtos[1].categoria, "Fondos value");
   assert.equal(dtos[2].categoria, "Renta fija");
   assert.equal(dtos[3].categoria, "Fondos monetarios");
   assert.equal(dtos[4].categoria, "No usados");
-  assert.equal(dtos[4].peso.valor, null);
-  assert.equal(dtos[4].cantidadMensual.valor, null);
+  assert.equal(dtos[4].peso, null);
+  assert.equal(dtos[4].cantidadMensual, null);
 });

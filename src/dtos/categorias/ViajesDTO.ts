@@ -1,16 +1,19 @@
 class ViajesDTO {
   año!: number;
   viajes!: ViajeDTO[];
-  total!: RegistroWrapperDTO;
+  total!: number | null;
+  notaTotal?: string;
 }
 
 class ViajeDTO {
   nombre!: string;
   gastos!: GastoViajeDTO[];
-  total!: RegistroWrapperDTO;
+  total!: number | null;
+  notaTotal?: string;
 }
 
 class GastoViajeDTO {
-  importe!: RegistroWrapperDTO;
+  importe!: number | null;
+  notaImporte?: string;
   comentario!: string | null;
 }

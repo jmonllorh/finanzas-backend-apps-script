@@ -8,7 +8,6 @@ class CategoriaGastosMapperTests {
   constructor() {
     this.context = vm.createContext({});
     const compiledFiles = [
-      "../../../dist/dtos/comun/UnidadValue.js",
       "../../../dist/dtos/comun/MesValue.js",
       "../../../dist/dtos/categorias/CategoriaGastosDTO.js",
       "../../../dist/utils/Utils.js",
@@ -69,20 +68,21 @@ test("CategoriaGastosMapperTests - construye DTOs por año con importes mensuale
     {
       mes: "Enero",
       importes: [
-        { valor: 10, unidad: "€", nota: "Nota del primer importe" },
-        { valor: 5, unidad: "€" }
+        { valor: 10, nota: "Nota del primer importe" },
+        { valor: 5 }
       ],
-      total: { valor: 15, unidad: "€", nota: "Nota del total" }
+      total: 15,
+      notaTotal: "Nota del total"
     }
   );
   assert.deepEqual(
     JSON.parse(JSON.stringify(dto[0].meses[1])),
     {
       mes: "Febrero",
-      importes: [{ valor: 20, unidad: "€" }],
-      total: { valor: 20, unidad: "€" }
+      importes: [{ valor: 20 }],
+      total: 20
     }
   );
   assert.equal(dto[1].año, 2025);
-  assert.equal(dto[1].meses[0].total.valor, 7);
+  assert.equal(dto[1].meses[0].total, 7);
 });

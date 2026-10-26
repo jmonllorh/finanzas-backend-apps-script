@@ -8,7 +8,6 @@ class EvolucionSalarioMapperTests {
   constructor() {
     this.context = vm.createContext({});
     const compiledFiles = [
-      "../../../dist/dtos/comun/UnidadValue.js",
       "../../../dist/dtos/EvolucionSalarioDTO.js",
       "../../../dist/utils/Utils.js",
       "../../../dist/mappers/EvolucionSalarioMapper.js"
@@ -49,20 +48,15 @@ test("EvolucionSalarioMapperTests - rellena un DTO desde una fila aislada", () =
 
   assert.equal(dto.fecha.toISOString(), "2024-10-20T00:00:00.000Z");
   assert.deepEqual(
-    JSON.parse(JSON.stringify(dto.salarioBrutoAnual)),
-    { valor: 48000, unidad: "€", nota: "Nota del salario bruto" }
+    JSON.parse(JSON.stringify(dto)),
+    {
+      fecha: fecha.toISOString(),
+      salarioBrutoAnual: 48000,
+      notaSalarioBrutoAnual: "Nota del salario bruto",
+      incrementoBrutoAnual: 0.25 * 100,
+      salarioNetoMensual: 2873.64,
+      incrementoNetoMensual: 1.75,
+      comentarios: "Subida anual"
+    }
   );
-  assert.deepEqual(
-    JSON.parse(JSON.stringify(dto.incrementoBrutoAnual)),
-    { valor: 0.25 * 100, unidad: "%" }
-  );
-  assert.deepEqual(
-    JSON.parse(JSON.stringify(dto.salarioNetoMensual)),
-    { valor: 2873.64, unidad: "€" }
-  );
-  assert.deepEqual(
-    JSON.parse(JSON.stringify(dto.incrementoNetoMensual)),
-    { valor: 0.0175 * 100, unidad: "%" }
-  );
-  assert.equal(dto.comentarios, "Subida anual");
 });

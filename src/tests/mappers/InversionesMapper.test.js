@@ -8,9 +8,7 @@ class InversionesMapperTests {
   constructor() {
     this.context = vm.createContext({});
     const compiledFiles = [
-      "../../../dist/dtos/comun/UnidadValue.js",
       "../../../dist/dtos/comun/TipoActivoValue.js",
-      "../../../dist/dtos/comun/RegistroWrapperDTO.js",
       "../../../dist/dtos/inversiones/InversionesDTO.js",
       "../../../dist/utils/Utils.js",
       "../../../dist/mappers/InversionesMapper.js"
@@ -134,77 +132,67 @@ test("InversionesMapperTests - mapea registros, totales y depósitos", () => {
     JSON.parse(JSON.stringify(dto.fondos.items[0].activos[0])),
     {
       tipo: "Bancos",
-      valor: { valor: 1000, unidad: "€" },
-      aportado: null,
-      beneficio: null,
-      ganancia: null
+      valor: 1000
     }
   );
   assert.deepEqual(
     JSON.parse(JSON.stringify(dto.fondos.items[0].activos[1])),
     {
       tipo: "Fondo monetario",
-      valor: { valor: 200, unidad: "€" },
-      aportado: null,
-      beneficio: null,
-      ganancia: null
+      valor: 200
     }
   );
   assert.deepEqual(
     JSON.parse(JSON.stringify(dto.fondos.items[0].activos[2])),
     {
       tipo: "Renta fija",
-      valor: { valor: 500, unidad: "€" },
-      aportado: null,
-      beneficio: null,
-      ganancia: null
+      valor: 500
     }
   );
   assert.deepEqual(
     JSON.parse(JSON.stringify(dto.fondos.items[0].activos[3])),
     {
       tipo: "Renta variable",
-      valor: { valor: 5000, unidad: "€" },
-      aportado: { valor: 100, unidad: "€" },
-      beneficio: { valor: 10, unidad: "€" },
-      ganancia: { valor: 1, unidad: "%" }
+      valor: 5000,
+      aportado: 100,
+      beneficio: 10,
+      ganancia: 1
     }
   );
   assert.deepEqual(
     JSON.parse(JSON.stringify(dto.fondos.items[0].activos[4])),
     {
       tipo: "Total",
-      valor: { valor: 6000, unidad: "€" },
-      aportado: null,
-      beneficio: { valor: 120, unidad: "€" },
-      ganancia: { valor: 2, unidad: "%" }
+      valor: 6000,
+      beneficio: 120,
+      ganancia: 2
     }
   );
-  assert.equal(dto.fondos.items[0].valorMaximoVivienda.valor, 80000);
+  assert.equal(dto.fondos.items[0].valorMaximoVivienda, 80000);
   assert.equal(dto.fondos.totales.length, 5);
   assert.equal(dto.fondos.totales[0].tipo, "Bancos");
-  assert.equal(dto.fondos.totales[0].valor.valor, 1000);
+  assert.equal(dto.fondos.totales[0].valor, 1000);
   assert.equal(dto.fondos.totales[0].beneficio, null);
   assert.equal(dto.fondos.totales[0].ganancia, null);
-  assert.equal(dto.fondos.totales[1].valor.valor, 200);
+  assert.equal(dto.fondos.totales[1].valor, 200);
   assert.equal(dto.fondos.totales[1].beneficio, null);
   assert.equal(dto.fondos.totales[1].ganancia, null);
-  assert.equal(dto.fondos.totales[2].valor.valor, 800);
+  assert.equal(dto.fondos.totales[2].valor, 800);
   assert.equal(dto.fondos.totales[2].beneficio, null);
   assert.equal(dto.fondos.totales[2].ganancia, null);
-  assert.equal(dto.fondos.totales[3].beneficio.valor, 250);
-  assert.equal(dto.fondos.totales[3].ganancia.valor, 50);
+  assert.equal(dto.fondos.totales[3].beneficio, 250);
+  assert.equal(dto.fondos.totales[3].ganancia, 50);
   assert.equal(dto.fondos.totales[4].tipo, "Total");
-  assert.equal(dto.fondos.totales[4].valor.valor, 6700);
+  assert.equal(dto.fondos.totales[4].valor, 6700);
   assert.equal(dto.fondos.totales[4].beneficio, null);
   assert.equal(dto.fondos.totales[4].ganancia, null);
-  assert.equal(dto.fondos.colchonSeguridadVivienda.valor, 15000);
+  assert.equal(dto.fondos.colchonSeguridadVivienda, 15000);
   assert.equal(dto.depositos.items.length, 1);
   assert.equal(dto.depositos.items[0].entidad, "Depósito A");
-  assert.equal(dto.depositos.items[0].tin.valor, 4);
+  assert.equal(dto.depositos.items[0].tin, 4);
   assert.equal(dto.depositos.items[0].activo, false);
-  assert.equal(dto.depositos.importeTotalActivos.valor, 0);
-  assert.equal(dto.depositos.interesesTotales.valor, 679.752);
+  assert.equal(dto.depositos.importeTotalActivos, 0);
+  assert.equal(dto.depositos.interesesTotales, 679.75);
 });
 
 test("InversionesMapperTests - localiza los totales aunque cambien de fila", () => {
@@ -215,15 +203,15 @@ test("InversionesMapperTests - localiza los totales aunque cambien de fila", () 
 
   const dto = mapperTests.mapSheet(rows, notes);
 
-  assert.equal(dto.fondos.totales[0].valor.valor, 1000);
-  assert.equal(dto.fondos.totales[1].valor.valor, 200);
-  assert.equal(dto.fondos.totales[2].valor.valor, 800);
-  assert.equal(dto.fondos.totales[3].beneficio.valor, 250);
-  assert.equal(dto.fondos.totales[3].ganancia.valor, 50);
+  assert.equal(dto.fondos.totales[0].valor, 1000);
+  assert.equal(dto.fondos.totales[1].valor, 200);
+  assert.equal(dto.fondos.totales[2].valor, 800);
+  assert.equal(dto.fondos.totales[3].beneficio, 250);
+  assert.equal(dto.fondos.totales[3].ganancia, 50);
   assert.equal(dto.fondos.totales[4].tipo, "Total");
-  assert.equal(dto.fondos.totales[4].valor.valor, 6700);
-  assert.equal(dto.depositos.importeTotalActivos.valor, 0);
-  assert.equal(dto.depositos.interesesTotales.valor, 679.752);
+  assert.equal(dto.fondos.totales[4].valor, 6700);
+  assert.equal(dto.depositos.importeTotalActivos, 0);
+  assert.equal(dto.depositos.interesesTotales, 679.75);
 });
 
 test("InversionesMapperTests - informa de encabezados inesperados", () => {

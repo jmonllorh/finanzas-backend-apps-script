@@ -8,9 +8,7 @@ class AguaMapperTests {
   constructor() {
     this.context = vm.createContext({});
     const compiledFiles = [
-      "../../../dist/dtos/comun/UnidadValue.js",
       "../../../dist/dtos/comun/MesValue.js",
-      "../../../dist/dtos/comun/RegistroWrapperDTO.js",
       "../../../dist/dtos/categorias/AguaDTO.js",
       "../../../dist/utils/Utils.js",
       "../../../dist/mappers/AguaMapper.js"
@@ -43,8 +41,8 @@ test("AguaMapperTests - rellena cada año con importes, consumo y precio por lit
   const rows = [
     [2026, ...Array(12).fill("")],
     ["Concepto", ...months],
-    ["Importe", 0, 72.62, ...Array(10).fill("")],
-    ["Consumo", 0, 11, ...Array(10).fill("")],
+    ["Importe", 0, 72.626, ...Array(10).fill("")],
+    ["Consumo", 0, 11.126, ...Array(10).fill("")],
     ["€/L", 0, 6.601818182, ...Array(10).fill("")],
     Array(13).fill(""),
     [2025, ...Array(12).fill("")],
@@ -64,11 +62,12 @@ test("AguaMapperTests - rellena cada año con importes, consumo y precio por lit
     JSON.parse(JSON.stringify(dtos[0].meses[1])),
     {
       mes: "Febrero",
-      importe: { valor: 72.62, unidad: "€", nota: "Incluye alcantarillado" },
-      consumo: { valor: 11, unidad: "m³" },
-      precioPorLitro: { valor: 6.601818182, unidad: "€/L" }
+      importe: 72.63,
+      notaImporte: "Incluye alcantarillado",
+      consumo: 11.13,
+      precioPorLitro: 6.601818182
     }
   );
-  assert.equal(dtos[0].meses[0].importe.valor, 0);
-  assert.equal(dtos[1].meses[1].precioPorLitro.valor, 7.079);
+  assert.equal(dtos[0].meses[0].importe, 0);
+  assert.equal(dtos[1].meses[1].precioPorLitro, 7.079);
 });

@@ -35,18 +35,17 @@ function crearDistribucionFondosDTO(
     const dto = new DistribucionFondoDTO();
     dto.categoria = categoriaActual;
     dto.nombre = nombre;
-    dto.peso = Utils.createPercentageWrapper(
+    [dto.peso, dto.notaPeso] = Utils.readPercentageAndNote(
       row[1],
       notes[rowIndex]?.[1]
     );
-    dto.cantidadMensual = Utils.createValueWrapper(
+    [dto.cantidadMensual, dto.notaCantidadMensual] = Utils.readValueAndNote(
       row[2],
-      notes[rowIndex]?.[2],
-      UnidadValue.Euro
+      notes[rowIndex]?.[2]
     );
     dto.isin = Utils.readText(row[3]);
     dto.nombreTecnico = Utils.readText(row[4]);
-    dto.comision = Utils.createPercentageWrapper(
+    [dto.comision, dto.notaComision] = Utils.readPercentageAndNote(
       row[5],
       notes[rowIndex]?.[5]
     );

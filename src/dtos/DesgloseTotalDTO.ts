@@ -2,21 +2,21 @@ class DesgloseTotalDTO {
   años!: DesgloseFinancieroDTO[];
   total!: DesgloseFinancieroDTO;
   mediaMensual!: ResumenCamposFinancierosDTO;
-  activos!: ActivosDesglosadosDTO;
+  activos!: ActivoDesglosadoDTO[];
 }
 
 class DesgloseFinancieroDTO extends ResumenCamposFinancierosDTO {
   año!: number | null;
-  viajes!: RegistroWrapperDTO;
-  bonosAyudasRenta!: RegistroWrapperDTO;
-  ingresosTotales!: RegistroWrapperDTO;
-}
-
-class ActivosDesglosadosDTO {
-  items!: ActivoDesglosadoDTO[];
+  viajes!: number | null;
+  notaViajes?: string;
+  bonosAyudasRenta!: number | null;
+  notaBonosAyudasRenta?: string;
+  ingresosTotales!: number | null;
+  notaIngresosTotales?: string;
 }
 
 class ActivoDesglosadoDTO {
   tipo!: TipoActivoValue;
-  valor!: RegistroWrapperDTO;
+  valor!: number | null;
+  notaValor?: string;
 }

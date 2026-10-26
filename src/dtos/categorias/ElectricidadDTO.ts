@@ -5,14 +5,20 @@ class ElectricidadDTO {
 
 class ElectricidadDetalleDTO {
   mes!: MesValue;
-  importe!: RegistroWrapperDTO;
-  consumo!: RegistroWrapperDTO;
+  importe!: number | null;
+  notaImporte?: string;
+  consumo!: number | null;
+  notaConsumo?: string;
   precio!: ElectricidadPrecioDTO;
 }
 
 class ElectricidadPrecioDTO {
-  precioEnergia!: RegistroWrapperDTO;
-  precioPotenciaPunta!: RegistroWrapperDTO;
-  precioPotenciaValle!: RegistroWrapperDTO;
-  precioPotenciaTotal!: RegistroWrapperDTO;
+  precioEnergia!: number | null;
+  notaPrecioEnergia?: string;
+  precioPotenciaPunta!: number | null;
+  notaPrecioPotenciaPunta?: string;
+  precioPotenciaValle!: number | null;
+  notaPrecioPotenciaValle?: string;
+  precioPotenciaTotal!: number | null;
+  notaPrecioPotenciaTotal?: string;
 }

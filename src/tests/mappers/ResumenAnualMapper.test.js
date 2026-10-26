@@ -9,8 +9,6 @@ class ResumenAnualMapperTests {
     this.context = vm.createContext({});
     const compiledFiles = [
       "../../../dist/dtos/comun/MesValue.js",
-      "../../../dist/dtos/comun/UnidadValue.js",
-      "../../../dist/dtos/comun/RegistroWrapperDTO.js",
       "../../../dist/dtos/comun/ResumenCamposFinancierosDTO.js",
       "../../../dist/dtos/ResumenAnualDTO.js",
       "../../../dist/utils/Utils.js",
@@ -76,31 +74,32 @@ test("ResumenAnualMapperTests - mapea meses, totales y columnas complementarias"
     JSON.parse(JSON.stringify(dto.meses[0])),
     {
       mes: "Enero",
-      alquiler: { valor: 1, unidad: "€", nota: "Nota del alquiler" },
-      electricidad: { valor: 2, unidad: "€" },
-      agua: { valor: 3, unidad: "€" },
-      internet: { valor: 4, unidad: "€" },
-      inversiones: { valor: 5, unidad: "€" },
-      suscripciones: { valor: 6, unidad: "€" },
-      medicos: { valor: 7, unidad: "€" },
-      comidaLimpieza: { valor: 8, unidad: "€" },
-      ocio: { valor: 9, unidad: "€" },
-      deporte: { valor: 10, unidad: "€" },
-      transporte: { valor: 11, unidad: "€" },
-      otros: { valor: 12, unidad: "€" },
-      ahorroNeto: { valor: 13, unidad: "€" },
-      ahorroBruto: { valor: 14, unidad: "€" },
-      totalGastos: { valor: 15, unidad: "€" },
-      ingresosFijos: { valor: 16, unidad: "€" }
+      alquiler: 1,
+      notaAlquiler: "Nota del alquiler",
+      electricidad: 2,
+      agua: 3,
+      internet: 4,
+      inversiones: 5,
+      suscripciones: 6,
+      medicos: 7,
+      comidaLimpieza: 8,
+      ocio: 9,
+      deporte: 10,
+      transporte: 11,
+      otros: 12,
+      ahorroNeto: 13,
+      ahorroBruto: 14,
+      totalGastos: 15,
+      ingresosFijos: 16
     }
   );
-  assert.equal(dto.total.alquiler.valor, 20);
-  assert.equal(dto.total.viajes.valor, 100);
-  assert.equal(dto.total.bonosAyudasRenta.valor, 50);
-  assert.equal(dto.mediaMensual.totalGastos.valor, 2);
+  assert.equal(dto.total.alquiler, 20);
+  assert.equal(dto.total.viajes, 100);
+  assert.equal(dto.total.bonosAyudasRenta, 50);
+  assert.equal(dto.mediaMensual.totalGastos, 2);
 });
 
-test("ResumenAnualMapperTests - representa como null campos que no existen en años antiguos", () => {
+test("ResumenAnualMapperTests - representa con cero campos ausentes en años antiguos", () => {
   const oldHeaders = currentHeaders.filter((header) => header !== "Internet");
   const rows = createSummaryRows(2025, oldHeaders, 15);
   const notes = rows.map(() => Array(18).fill(""));
@@ -108,8 +107,37 @@ test("ResumenAnualMapperTests - representa como null campos que no existen en a�
   const dto = mapperTests.mapSheet(rows, notes, "Resumen 2025");
 
   assert.equal(dto.año, 2025);
+  assert.equal(dto.meses[0].internet, 0);
+  assert.equal(dto.meses[0].notaInternet, undefined);
+});
+
+test("ResumenAnualMapperTests - conserva null cuando Internet existe pero está vacío", () => {
+  const rows = createSummaryRows(2026, currentHeaders, 16);
+  rows[2][4] = "";
+  const notes = rows.map(() => Array(19).fill(""));
+
+  const dto = mapperTests.mapSheet(rows, notes);
+
+  assert.equal(dto.meses[0].internet, null);
+});
+
+test("ResumenAnualMapperTests - omite meses sin valores ni notas", () => {
+  const oldHeaders = currentHeaders.filter((header) => header !== "Internet");
+  const rows = createSummaryRows(2021, oldHeaders, 15);
+  for (const row of rows.slice(2, 4)) {
+    for (let columnIndex = 1; columnIndex <= 11; columnIndex++) {
+      row[columnIndex] = "-";
+    }
+    for (let columnIndex = 12; columnIndex <= 15; columnIndex++) {
+      row[columnIndex] = 0;
+    }
+  }
+  const notes = rows.map(() => Array(18).fill(""));
+
+  const dto = mapperTests.mapSheet(rows, notes, "Resumen 2021");
+
   assert.deepEqual(
-    JSON.parse(JSON.stringify(dto.meses[0].internet)),
-    { valor: null, unidad: "€" }
+    JSON.parse(JSON.stringify(dto.meses.map(({ mes }) => mes))),
+    months.slice(2)
   );
 });

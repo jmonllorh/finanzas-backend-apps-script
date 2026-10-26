@@ -9,7 +9,6 @@ class UtilsTests {
     this.context = vm.createContext({});
     const compiledFiles = [
       "../../../dist/dtos/comun/MesValue.js",
-      "../../../dist/dtos/comun/UnidadValue.js",
       "../../../dist/utils/Utils.js"
     ];
     for (const file of compiledFiles) {
@@ -35,10 +34,14 @@ test("UtilsTests - readText conserva texto, convierte otros valores y normaliza 
   assert.equal(utilsTests.evaluate("Utils.readText(undefined)"), null);
 });
 
-test("UtilsTests - readNumber devuelve null para valores no numéricos", () => {
+test("UtilsTests - readNumber redondea a dos decimales y rechaza valores no numéricos", () => {
   assert.equal(utilsTests.evaluate("Utils.readNumber(42)"), 42);
   assert.equal(utilsTests.evaluate("Utils.readNumber('2')"), 2);
   assert.equal(utilsTests.evaluate("Utils.readNumber(' 2 ')"), 2);
+  assert.equal(utilsTests.evaluate("Utils.readNumber(4459.629999999999)"), 4459.63);
+  assert.equal(utilsTests.evaluate("Utils.readNumber(6.601818182)"), 6.6);
+  assert.equal(utilsTests.evaluate("Utils.readNumber(1.235)"), 1.24);
+  assert.equal(utilsTests.evaluate("Utils.readNumber(-1.235)"), -1.24);
   assert.equal(utilsTests.evaluate("Utils.readNumber('')"), null);
   assert.equal(utilsTests.evaluate("Utils.readNumber(null)"), null);
   assert.equal(utilsTests.evaluate("Utils.readNumber('texto')"), null);
@@ -127,45 +130,47 @@ test("UtilsTests - findRowIndex busca en la columna indicada", () => {
   );
 });
 
-test("UtilsTests - createValueWrapper conserva unidad y añade solo notas presentes", () => {
+test("UtilsTests - readValueAndNote devuelve el valor y solo las notas presentes", () => {
   const value = utilsTests.evaluate(
-    "Utils.createValueWrapper(12.5, 'Nota', UnidadValue.Euro)"
+    "Utils.readValueAndNote(12.5, 'Nota')"
   );
-  assert.deepEqual(
-    JSON.parse(JSON.stringify(value)),
-    { valor: 12.5, unidad: "€", nota: "Nota" }
+  assert.equal(value[0], 12.5);
+  assert.equal(value[1], "Nota");
+  const rounded = utilsTests.evaluate(
+    "Utils.readValueAndNote(12.345, 'Nota')"
   );
+  assert.equal(rounded[0], 12.35);
+  const precise = utilsTests.evaluate(
+    "Utils.readValueAndNote(6.601818182, '', false)"
+  );
+  assert.equal(precise[0], 6.601818182);
   const withoutNote = utilsTests.evaluate(
-    "Utils.createValueWrapper('', '', UnidadValue.Euro)"
+    "Utils.readValueAndNote('', '')"
   );
-  assert.deepEqual(
-    JSON.parse(JSON.stringify(withoutNote)),
-    { valor: null, unidad: "€" }
-  );
+  assert.equal(withoutNote[0], null);
+  assert.equal(withoutNote[1], undefined);
 });
 
-test("UtilsTests - createPercentageWrapper convierte fracciones y conserva valores nulos", () => {
+test("UtilsTests - readPercentageAndNote convierte fracciones y conserva valores nulos", () => {
   const percentage = utilsTests.evaluate(
-    "Utils.createPercentageWrapper(0.125, 'Porcentaje configurado')"
+    "Utils.readPercentageAndNote(0.125, 'Porcentaje configurado')"
   );
-  assert.deepEqual(
-    JSON.parse(JSON.stringify(percentage)),
-    { valor: 12.5, unidad: "%", nota: "Porcentaje configurado" }
+  assert.equal(percentage[0], 12.5);
+  assert.equal(percentage[1], "Porcentaje configurado");
+  assert.equal(
+    utilsTests.evaluate("Utils.readPercentageAndNote(0.108829, '')")[0],
+    10.88
   );
   const zero = utilsTests.evaluate(
-    "Utils.createPercentageWrapper(0, '')"
+    "Utils.readPercentageAndNote(0, '')"
   );
-  assert.deepEqual(
-    JSON.parse(JSON.stringify(zero)),
-    { valor: 0, unidad: "%" }
-  );
+  assert.equal(zero[0], 0);
+  assert.equal(zero[1], undefined);
   const missing = utilsTests.evaluate(
-    "Utils.createPercentageWrapper('', null)"
+    "Utils.readPercentageAndNote('', null)"
   );
-  assert.deepEqual(
-    JSON.parse(JSON.stringify(missing)),
-    { valor: null, unidad: "%" }
-  );
+  assert.equal(missing[0], null);
+  assert.equal(missing[1], undefined);
 });
 
 test("UtilsTests - readDate acepta Date y devuelve null para otros valores", () => {

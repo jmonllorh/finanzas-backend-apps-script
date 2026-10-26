@@ -5,6 +5,12 @@ class CategoriaGastosDTO {
 
 class GastosCategoriaMensualDTO {
   mes!: MesValue;
-  importes!: RegistroWrapperDTO[];
-  total!: RegistroWrapperDTO;
+  importes!: ImporteCategoriaDTO[];
+  total!: number | null;
+  notaTotal?: string;
+}
+
+class ImporteCategoriaDTO {
+  valor!: number;
+  nota?: string;
 }

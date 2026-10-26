@@ -49,10 +49,9 @@ function crearInversionesDTO(
     primeraFilaMensual
   );
   fondos.totales = crearTotalesFondo(rows, notes);
-  fondos.colchonSeguridadVivienda = Utils.createValueWrapper(
+  [fondos.colchonSeguridadVivienda, fondos.notaColchonSeguridadVivienda] = Utils.readValueAndNote(
     rows[primeraFilaMensual][COLUMNAS_INVERSIONES.colchonSeguridadVivienda.indice],
-    notes[primeraFilaMensual]?.[COLUMNAS_INVERSIONES.colchonSeguridadVivienda.indice],
-    UnidadValue.Euro
+    notes[primeraFilaMensual]?.[COLUMNAS_INVERSIONES.colchonSeguridadVivienda.indice]
   );
 
   const depositos = new RegistroDepositoDTO();
@@ -71,15 +70,13 @@ function crearInversionesDTO(
     (label) => label === "intereses totales:",
     COLUMNAS_INVERSIONES.activo.indice - 1,
   );
-  depositos.importeTotalActivos = Utils.createValueWrapper(
+  [depositos.importeTotalActivos, depositos.notaImporteTotalActivos] = Utils.readValueAndNote(
     rows[totalActivosRowIndex][COLUMNAS_INVERSIONES.importe.indice],
-    notes[totalActivosRowIndex]?.[COLUMNAS_INVERSIONES.importe.indice],
-    UnidadValue.Euro
+    notes[totalActivosRowIndex]?.[COLUMNAS_INVERSIONES.importe.indice]
   );
-  depositos.interesesTotales = Utils.createValueWrapper(
+  [depositos.interesesTotales, depositos.notaInteresesTotales] = Utils.readValueAndNote(
     rows[totalInteresesRowIndex][COLUMNAS_INVERSIONES.activo.indice],
-    notes[totalInteresesRowIndex]?.[COLUMNAS_INVERSIONES.activo.indice],
-    UnidadValue.Euro
+    notes[totalInteresesRowIndex]?.[COLUMNAS_INVERSIONES.activo.indice]
   );
 
   const dto = new InversionesDTO();
@@ -153,10 +150,9 @@ function crearRegistrosMensualesFondo(
         }
       )
     ];
-    dto.valorMaximoVivienda = Utils.createValueWrapper(
+    [dto.valorMaximoVivienda, dto.notaValorMaximoVivienda] = Utils.readValueAndNote(
       row[COLUMNAS_INVERSIONES.valorMaximoVivienda.indice],
-      notes[rowIndex]?.[COLUMNAS_INVERSIONES.valorMaximoVivienda.indice],
-      UnidadValue.Euro
+      notes[rowIndex]?.[COLUMNAS_INVERSIONES.valorMaximoVivienda.indice]
     );
     result.push(dto);
   }
@@ -222,34 +218,28 @@ function crearActivoFondo(
 ): ActivoFondoDTO {
   const dto = new ActivoFondoDTO();
   dto.tipo = tipo;
-  dto.valor = Utils.createValueWrapper(
+  [dto.valor, dto.notaValor] = Utils.readValueAndNote(
     row[columnas.valor],
-    notes?.[columnas.valor],
-    UnidadValue.Euro
+    notes?.[columnas.valor]
   );
-  dto.aportado =
-    columnas.aportado === undefined
-      ? null
-      : Utils.createValueWrapper(
-          row[columnas.aportado],
-          notes?.[columnas.aportado],
-          UnidadValue.Euro
-        );
-  dto.beneficio =
-    columnas.beneficio === undefined
-      ? null
-      : Utils.createValueWrapper(
-          row[columnas.beneficio],
-          notes?.[columnas.beneficio],
-          UnidadValue.Euro
-        );
-  dto.ganancia =
-    columnas.ganancia === undefined
-      ? null
-      : Utils.createPercentageWrapper(
-          row[columnas.ganancia],
-          notes?.[columnas.ganancia]
-        );
+  if (columnas.aportado !== undefined) {
+    [dto.aportado, dto.notaAportado] = Utils.readValueAndNote(
+      row[columnas.aportado],
+      notes?.[columnas.aportado]
+    );
+  }
+  if (columnas.beneficio !== undefined) {
+    [dto.beneficio, dto.notaBeneficio] = Utils.readValueAndNote(
+      row[columnas.beneficio],
+      notes?.[columnas.beneficio]
+    );
+  }
+  if (columnas.ganancia !== undefined) {
+    [dto.ganancia, dto.notaGanancia] = Utils.readPercentageAndNote(
+      row[columnas.ganancia],
+      notes?.[columnas.ganancia]
+    );
+  }
   return dto;
 }
 
@@ -324,26 +314,34 @@ function crearTotalesFondo(
 }
 
 /**
- * Asigna al DTO el tipo de activo y sus wrappers de valor, beneficio y ganancia.
+ * Asigna al DTO el tipo de activo y sus valores de valor, beneficio y ganancia.
  * Beneficio y ganancia son opcionales para activos que no tienen esos datos.
  */
 function crearTotalFondo(
   tipo: TipoActivoValue,
-  valor: RegistroWrapperDTO,
-  beneficio: RegistroWrapperDTO | null = null,
-  ganancia: RegistroWrapperDTO | null = null
+  valor: [number | null, string | undefined],
+  beneficio: [number | null, string | undefined] | null = null,
+  ganancia: [number | null, string | undefined] | null = null
 ): TotalesRegistroFondoDTO {
   const dto = new TotalesRegistroFondoDTO();
   dto.tipo = tipo;
-  dto.valor = valor;
-  dto.beneficio = beneficio;
-  dto.ganancia = ganancia;
+  [dto.valor, dto.notaValor] = valor;
+  if (beneficio === null) {
+    dto.beneficio = null;
+  } else {
+    [dto.beneficio, dto.notaBeneficio] = beneficio;
+  }
+  if (ganancia === null) {
+    dto.ganancia = null;
+  } else {
+    [dto.ganancia, dto.notaGanancia] = ganancia;
+  }
   return dto;
 }
 
 /**
  * Busca el valor numérico que sigue a una etiqueta en una columna y conserva su nota.
- * Devuelve un wrapper en euros o, si percentage es true, convierte la fracción a porcentaje.
+ * Si percentage es true, convierte la fracción a porcentaje.
  */
 function leerValorDebajoEtiqueta(
   rows: unknown[][],
@@ -351,21 +349,20 @@ function leerValorDebajoEtiqueta(
   columnIndex: number,
   label: string,
   percentage = false
-): RegistroWrapperDTO {
+): [number | null, string | undefined] {
   const rowIndex = encontrarFilaSiguienteValor(
     rows,
     columnIndex,
     label
   );
   return percentage
-    ? Utils.createPercentageWrapper(
+    ? Utils.readPercentageAndNote(
         rows[rowIndex][columnIndex],
         notes[rowIndex]?.[columnIndex]
       )
-    : Utils.createValueWrapper(
+    : Utils.readValueAndNote(
         rows[rowIndex][columnIndex],
-        notes[rowIndex]?.[columnIndex],
-        UnidadValue.Euro
+        notes[rowIndex]?.[columnIndex]
       );
 }
 
@@ -434,26 +431,23 @@ function crearDepositos(
 
     const dto = new DepositoDTO();
     dto.entidad = entidad;
-    dto.importe = Utils.createValueWrapper(
+    [dto.importe, dto.notaImporte] = Utils.readValueAndNote(
       row[COLUMNAS_INVERSIONES.importe.indice],
-      notes[rowIndex]?.[COLUMNAS_INVERSIONES.importe.indice],
-      UnidadValue.Euro
+      notes[rowIndex]?.[COLUMNAS_INVERSIONES.importe.indice]
     );
     dto.fechaInicio = fechaInicio;
     dto.fechaVencimiento = fechaVencimiento;
-    dto.tin = Utils.createPercentageWrapper(
+    [dto.tin, dto.notaTin] = Utils.readPercentageAndNote(
       row[COLUMNAS_INVERSIONES.tin.indice],
       notes[rowIndex]?.[COLUMNAS_INVERSIONES.tin.indice]
     );
-    dto.interesesBrutos = Utils.createValueWrapper(
+    [dto.interesesBrutos, dto.notaInteresesBrutos] = Utils.readValueAndNote(
       row[COLUMNAS_INVERSIONES.interesesBrutos.indice],
-      notes[rowIndex]?.[COLUMNAS_INVERSIONES.interesesBrutos.indice],
-      UnidadValue.Euro
+      notes[rowIndex]?.[COLUMNAS_INVERSIONES.interesesBrutos.indice]
     );
-    dto.interesesNetos = Utils.createValueWrapper(
+    [dto.interesesNetos, dto.notaInteresesNetos] = Utils.readValueAndNote(
       row[COLUMNAS_INVERSIONES.interesesNetos.indice],
-      notes[rowIndex]?.[COLUMNAS_INVERSIONES.interesesNetos.indice],
-      UnidadValue.Euro
+      notes[rowIndex]?.[COLUMNAS_INVERSIONES.interesesNetos.indice]
     );
     dto.activo = estadoActivo === "si";
     result.push(dto);

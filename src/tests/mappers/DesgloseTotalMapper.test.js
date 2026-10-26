@@ -8,9 +8,7 @@ class DesgloseTotalMapperTests {
   constructor() {
     this.context = vm.createContext({});
     const compiledFiles = [
-      "../../../dist/dtos/comun/UnidadValue.js",
       "../../../dist/dtos/comun/TipoActivoValue.js",
-      "../../../dist/dtos/comun/RegistroWrapperDTO.js",
       "../../../dist/dtos/comun/ResumenCamposFinancierosDTO.js",
       "../../../dist/dtos/DesgloseTotalDTO.js",
       "../../../dist/utils/Utils.js",
@@ -78,14 +76,14 @@ test("DesgloseTotalMapperTests - mapea años, agregados y activos", () => {
 
   assert.equal(dto.años.length, 2);
   assert.equal(dto.años[0].año, 2025);
-  assert.equal(dto.años[0].viajes.valor, 22);
-  assert.equal(dto.años[0].bonosAyudasRenta.valor, 27);
-  assert.equal(dto.años[0].ingresosTotales.valor, 28);
+  assert.equal(dto.años[0].viajes, 22);
+  assert.equal(dto.años[0].bonosAyudasRenta, 27);
+  assert.equal(dto.años[0].ingresosTotales, 28);
   assert.equal(dto.total.año, null);
-  assert.equal(dto.total.totalGastos.valor, 45);
-  assert.equal(dto.mediaMensual.alquiler.valor, 40);
-  assert.equal(dto.activos.items.length, 6);
-  assert.equal(dto.activos.items[4].tipo, "Renta fija");
-  assert.equal(dto.activos.items[4].valor.valor, 500);
-  assert.equal(dto.activos.items[5].tipo, "Total");
+  assert.equal(dto.total.totalGastos, 45);
+  assert.equal(dto.mediaMensual.alquiler, 40);
+  assert.equal(dto.activos.length, 6);
+  assert.equal(dto.activos[4].tipo, "Renta fija");
+  assert.equal(dto.activos[4].valor, 500);
+  assert.equal(dto.activos[5].tipo, "Total");
 });

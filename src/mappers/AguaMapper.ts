@@ -6,7 +6,7 @@ interface FilasAgua {
 
 /**
  * Recorre los bloques anuales de la hoja y construye un DTO con sus doce meses.
- * Cada mes incluye importe, consumo y precio por litro, con sus unidades y notas.
+ * Cada mes incluye importe, consumo y precio por litro, con sus notas.
  */
 function crearAguaDTO(
   sheet: GoogleAppsScript.Spreadsheet.Sheet
@@ -38,20 +38,18 @@ function crearAguaDTO(
     dto.meses = columnasMeses.map(({ mes, indice }) => {
       const mesDTO = new AguaDetalleDTO();
       mesDTO.mes = mes;
-      mesDTO.importe = Utils.createValueWrapper(
+      [mesDTO.importe, mesDTO.notaImporte] = Utils.readValueAndNote(
         rows[filas.importe][indice],
-        notes[filas.importe]?.[indice],
-        UnidadValue.Euro
+        notes[filas.importe]?.[indice]
       );
-      mesDTO.consumo = Utils.createValueWrapper(
+      [mesDTO.consumo, mesDTO.notaConsumo] = Utils.readValueAndNote(
         rows[filas.consumo][indice],
-        notes[filas.consumo]?.[indice],
-        UnidadValue.MetroCubico
+        notes[filas.consumo]?.[indice]
       );
-      mesDTO.precioPorLitro = Utils.createValueWrapper(
+      [mesDTO.precioPorLitro, mesDTO.notaPrecioPorLitro] = Utils.readValueAndNote(
         rows[filas.precioPorLitro][indice],
         notes[filas.precioPorLitro]?.[indice],
-        UnidadValue.EuroPorLitro
+        false
       );
       return mesDTO;
     });

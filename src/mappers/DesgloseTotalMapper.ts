@@ -58,13 +58,11 @@ function crearDesgloseTotalDTO(
     rows[mediaRowIndex],
     notes[mediaRowIndex] ?? []
   );
-  dto.activos = {
-    items: crearActivosDesglosados(
-      rows,
-      notes,
-      mediaRowIndex + 1
-    )
-  };
+  dto.activos = crearActivosDesglosados(
+    rows,
+    notes,
+    mediaRowIndex + 1
+  );
   return dto;
 }
 
@@ -85,19 +83,19 @@ function crearDesgloseFinancieroDesdeFila(
     dto,
     crearResumenCamposFinancierosDTO(headers, row, notes)
   );
-  dto.viajes = crearValorDesgloseTotal(
+  [dto.viajes, dto.notaViajes] = crearValorDesgloseTotal(
     row,
     notes,
     headerTexts,
     "Viajes"
   );
-  dto.bonosAyudasRenta = crearValorDesgloseTotal(
+  [dto.bonosAyudasRenta, dto.notaBonosAyudasRenta] = crearValorDesgloseTotal(
     row,
     notes,
     headerTexts,
     "Bonos, ayudas, renta"
   );
-  dto.ingresosTotales = crearValorDesgloseTotal(
+  [dto.ingresosTotales, dto.notaIngresosTotales] = crearValorDesgloseTotal(
     row,
     notes,
     headerTexts,
@@ -107,23 +105,22 @@ function crearDesgloseFinancieroDesdeFila(
 }
 
 /**
- * Busca el encabezado exacto en la fila de cabeceras y envuelve el valor y su nota
- * como importe en euros. Falla si la columna no está presente.
+ * Busca el encabezado exacto en la fila de cabeceras y devuelve su valor y nota.
+ * Falla si la columna no está presente.
  */
 function crearValorDesgloseTotal(
   row: unknown[],
   notes: string[],
   headers: string[],
   header: string,
-): RegistroWrapperDTO {
+): [number | null, string | undefined] {
   const columnIndex = headers.indexOf(header);
   if (columnIndex === -1) {
     throw new Error(`No se encontró la columna "${header}" en la hoja.`);
   }
-  return Utils.createValueWrapper(
+  return Utils.readValueAndNote(
     row[columnIndex],
-    notes[columnIndex],
-    UnidadValue.Euro
+    notes[columnIndex]
   );
 }
 
@@ -159,10 +156,9 @@ function crearActivosDesglosados(
     const tipo = Utils.obtenerTipoActivoDesglosado(label);
     const dto = new ActivoDesglosadoDTO();
     dto.tipo = tipo;
-    dto.valor = Utils.createValueWrapper(
+    [dto.valor, dto.notaValor] = Utils.readValueAndNote(
       rows[rowIndex][3],
-      notes[rowIndex]?.[3],
-      UnidadValue.Euro
+      notes[rowIndex]?.[3]
     );
     result.push(dto);
     if (tipo === TipoActivoValue.Total) {

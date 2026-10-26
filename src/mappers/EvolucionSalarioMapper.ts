@@ -64,32 +64,24 @@ function crearEvolucionSalarioDTODesdeFila(
   columns: ColumnasEvolucionSalario
 ): EvolucionSalarioDTO {
   const fecha = Utils.readDate(row[columns.fecha]);
-  const salarioBrutoAnual = Utils.createValueWrapper(
+  const dto = new EvolucionSalarioDTO();
+  dto.fecha = fecha;
+  [dto.salarioBrutoAnual, dto.notaSalarioBrutoAnual] = Utils.readValueAndNote(
     row[columns.salarioBrutoAnual],
-    notas[columns.salarioBrutoAnual],
-    UnidadValue.Euro
+    notas[columns.salarioBrutoAnual]
   );
-  const incrementoBrutoAnual = Utils.createPercentageWrapper(
+  [dto.incrementoBrutoAnual, dto.notaIncrementoBrutoAnual] = Utils.readPercentageAndNote(
     row[columns.incrementoBrutoAnual],
     notas[columns.incrementoBrutoAnual]
   );
-  const salarioNetoMensual = Utils.createValueWrapper(
+  [dto.salarioNetoMensual, dto.notaSalarioNetoMensual] = Utils.readValueAndNote(
     row[columns.salarioNetoMensual],
-    notas[columns.salarioNetoMensual],
-    UnidadValue.Euro
+    notas[columns.salarioNetoMensual]
   );
-  const incrementoNetoMensual = Utils.createPercentageWrapper(
+  [dto.incrementoNetoMensual, dto.notaIncrementoNetoMensual] = Utils.readPercentageAndNote(
     row[columns.incrementoNetoMensual],
     notas[columns.incrementoNetoMensual]
   );
-  const comentarios = Utils.readText(row[columns.comentarios]);
-
-  const dto = new EvolucionSalarioDTO();
-  dto.fecha = fecha;
-  dto.salarioBrutoAnual = salarioBrutoAnual;
-  dto.incrementoBrutoAnual = incrementoBrutoAnual;
-  dto.salarioNetoMensual = salarioNetoMensual;
-  dto.incrementoNetoMensual = incrementoNetoMensual;
-  dto.comentarios = comentarios;
+  dto.comentarios = Utils.readText(row[columns.comentarios]);
   return dto;
 }

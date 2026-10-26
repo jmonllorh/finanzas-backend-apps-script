@@ -10,6 +10,8 @@ class ResumenMensualDTO extends ResumenCamposFinancierosDTO {
 }
 
 class TotalAnualDTO extends ResumenCamposFinancierosDTO {
-  viajes!: RegistroWrapperDTO;
-  bonosAyudasRenta!: RegistroWrapperDTO;
+  viajes!: number | null;
+  notaViajes?: string;
+  bonosAyudasRenta!: number | null;
+  notaBonosAyudasRenta?: string;
 }

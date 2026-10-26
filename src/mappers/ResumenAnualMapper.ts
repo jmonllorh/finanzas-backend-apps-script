@@ -8,6 +8,21 @@ function crearResumenesAnualesDTO(
 }
 
 /**
+ * Indica si el mes contiene algún valor distinto de cero o alguna nota.
+ */
+function tieneDatosMensuales(dto: ResumenMensualDTO): boolean {
+  return Object.entries(dto).some(([campo, valor]) => {
+    if (campo === "mes") {
+      return false;
+    }
+    if (typeof valor === "number") {
+      return valor !== 0;
+    }
+    return typeof valor === "string" && valor.trim() !== "";
+  });
+}
+
+/**
  * Valida el año y las filas mensuales, localiza total y media mensual y mapea
  * sus campos financieros; añade viajes y bonos/ayudas/renta al total anual.
  */
@@ -58,7 +73,7 @@ function crearResumenAnualDTO(
       )
     );
     return dto;
-  });
+  }).filter(tieneDatosMensuales);
 
   const columnasExtras = rows[totalRowIndex - 1].map(
     (value) => Utils.readText(value) ?? ""
@@ -77,15 +92,13 @@ function crearResumenAnualDTO(
       notes[totalRowIndex] ?? []
     )
   );
-  total.viajes = Utils.createValueWrapper(
+  [total.viajes, total.notaViajes] = Utils.readValueAndNote(
     rows[totalRowIndex][viajesColumnIndex],
-    notes[totalRowIndex]?.[viajesColumnIndex],
-    UnidadValue.Euro
+    notes[totalRowIndex]?.[viajesColumnIndex]
   );
-  total.bonosAyudasRenta = Utils.createValueWrapper(
+  [total.bonosAyudasRenta, total.notaBonosAyudasRenta] = Utils.readValueAndNote(
     rows[totalRowIndex][bonosColumnIndex],
-    notes[totalRowIndex]?.[bonosColumnIndex],
-    UnidadValue.Euro
+    notes[totalRowIndex]?.[bonosColumnIndex]
   );
 
   const dto = new ResumenAnualDTO();
