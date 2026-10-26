@@ -113,6 +113,20 @@ test("UtilsTests - normalizeLabel y findRowIndex comparten normalización y erro
   );
 });
 
+test("UtilsTests - findRowIndex busca en la columna indicada", () => {
+  const rows = JSON.stringify([
+    ["", "", "Entidad"],
+    ["", "", " total activos: "],
+    ["", "", "Depósito"]
+  ]);
+  assert.equal(
+    utilsTests.evaluate(
+      `Utils.findRowIndex(${rows}, 0, 3, label => label === 'total activos:', 2)`
+    ),
+    1
+  );
+});
+
 test("UtilsTests - createValueWrapper conserva unidad y añade solo notas presentes", () => {
   const value = utilsTests.evaluate(
     "Utils.createValueWrapper(12.5, 'Nota', UnidadValue.Euro)"
@@ -127,6 +141,30 @@ test("UtilsTests - createValueWrapper conserva unidad y añade solo notas presen
   assert.deepEqual(
     JSON.parse(JSON.stringify(withoutNote)),
     { valor: null, unidad: "€" }
+  );
+});
+
+test("UtilsTests - createPercentageWrapper convierte fracciones y conserva valores nulos", () => {
+  const percentage = utilsTests.evaluate(
+    "Utils.createPercentageWrapper(0.125, 'Porcentaje configurado')"
+  );
+  assert.deepEqual(
+    JSON.parse(JSON.stringify(percentage)),
+    { valor: 12.5, unidad: "%", nota: "Porcentaje configurado" }
+  );
+  const zero = utilsTests.evaluate(
+    "Utils.createPercentageWrapper(0, '')"
+  );
+  assert.deepEqual(
+    JSON.parse(JSON.stringify(zero)),
+    { valor: 0, unidad: "%" }
+  );
+  const missing = utilsTests.evaluate(
+    "Utils.createPercentageWrapper('', null)"
+  );
+  assert.deepEqual(
+    JSON.parse(JSON.stringify(missing)),
+    { valor: null, unidad: "%" }
   );
 });
 

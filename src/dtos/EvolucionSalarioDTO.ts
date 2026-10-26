@@ -1,8 +1,8 @@
 class EvolucionSalarioDTO {
   fecha!: Date | null;
-  salarioBrutoAnual!: ValorWrapperDTO;
-  incrementoBrutoAnual!: ValorWrapperDTO;
-  salarioNetoMensual!: ValorWrapperDTO;
-  incrementoNetoMensual!: ValorWrapperDTO;
+  salarioBrutoAnual!: RegistroWrapperDTO;
+  incrementoBrutoAnual!: RegistroWrapperDTO;
+  salarioNetoMensual!: RegistroWrapperDTO;
+  incrementoNetoMensual!: RegistroWrapperDTO;
   comentarios!: string | null;
 }

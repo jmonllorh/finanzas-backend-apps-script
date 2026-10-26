@@ -5,7 +5,7 @@ class AguaDTO {
 
 class AguaDetalleDTO {
   mes!: MesValue;
-  importe!: ValorWrapperDTO;
-  consumo!: ValorWrapperDTO;
-  precioPorLitro!: ValorWrapperDTO;
+  importe!: RegistroWrapperDTO;
+  consumo!: RegistroWrapperDTO;
+  precioPorLitro!: RegistroWrapperDTO;
 }

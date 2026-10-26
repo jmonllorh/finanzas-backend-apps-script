@@ -10,7 +10,7 @@ class AguaMapperTests {
     const compiledFiles = [
       "../../../dist/dtos/comun/UnidadValue.js",
       "../../../dist/dtos/comun/MesValue.js",
-      "../../../dist/dtos/comun/ValorWrapperDTO.js",
+      "../../../dist/dtos/comun/RegistroWrapperDTO.js",
       "../../../dist/dtos/categorias/AguaDTO.js",
       "../../../dist/utils/Utils.js",
       "../../../dist/mappers/AguaMapper.js"

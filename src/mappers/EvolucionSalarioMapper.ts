@@ -57,27 +57,19 @@ function crearEvolucionSalarioDTODesdeFila(
     notas[columns.salarioBrutoAnual],
     UnidadValue.Euro
   );
-  const incrementoBrutoAnual = Utils.createValueWrapper(
+  const incrementoBrutoAnual = Utils.createPercentageWrapper(
     row[columns.incrementoBrutoAnual],
-    notas[columns.incrementoBrutoAnual],
-    UnidadValue.Porcentaje
+    notas[columns.incrementoBrutoAnual]
   );
   const salarioNetoMensual = Utils.createValueWrapper(
     row[columns.salarioNetoMensual],
     notas[columns.salarioNetoMensual],
     UnidadValue.Euro
   );
-  const incrementoNetoMensual = Utils.createValueWrapper(
+  const incrementoNetoMensual = Utils.createPercentageWrapper(
     row[columns.incrementoNetoMensual],
-    notas[columns.incrementoNetoMensual],
-    UnidadValue.Porcentaje
+    notas[columns.incrementoNetoMensual]
   );
-  incrementoBrutoAnual.valor = incrementoBrutoAnual.valor === null
-    ? null
-    : incrementoBrutoAnual.valor * 100;
-  incrementoNetoMensual.valor = incrementoNetoMensual.valor === null
-    ? null
-    : incrementoNetoMensual.valor * 100;
   const comentarios = Utils.readText(row[columns.comentarios]);
 
   const dto = new EvolucionSalarioDTO();

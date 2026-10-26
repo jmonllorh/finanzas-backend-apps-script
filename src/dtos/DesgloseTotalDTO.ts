@@ -7,17 +7,16 @@ class DesgloseTotalDTO {
 
 class DesgloseFinancieroDTO extends ResumenCamposFinancierosDTO {
   año!: number | null;
-  viajes!: ValorWrapperDTO;
-  bonosAyudasRenta!: ValorWrapperDTO;
-  ingresosTotales!: ValorWrapperDTO;
+  viajes!: RegistroWrapperDTO;
+  bonosAyudasRenta!: RegistroWrapperDTO;
+  ingresosTotales!: RegistroWrapperDTO;
 }
 
 class ActivosDesglosadosDTO {
-  // Aquí se añadirá el agregado con los totales de los activos desglosados
-  activos!: ActivoDesglosadoDTO[];
+  items!: ActivoDesglosadoDTO[];
 }
 
 class ActivoDesglosadoDTO {
   tipo!: TipoActivoValue;
-  valor!: ValorWrapperDTO;
+  valor!: RegistroWrapperDTO;
 }

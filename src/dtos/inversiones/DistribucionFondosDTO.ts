@@ -1,17 +1,17 @@
 class DistribucionFondoDTO {
   categoria!: CategoriaFondo | null;
   nombre!: string | null;
-  peso!: ValorWrapperDTO;
-  cantidadMensual!: ValorWrapperDTO;
+  peso!: RegistroWrapperDTO;
+  cantidadMensual!: RegistroWrapperDTO;
   isin!: string | null;
   nombreTecnico!: string | null;
-  comision!: ValorWrapperDTO;
+  comision!: RegistroWrapperDTO;
 }
 
 enum CategoriaFondo {
   FONDOS_INDEXADOS = "Fondos indexados",
   FONDOS_VALUE = "Fondos value",
   RENTA_FIJA = "Renta fija",
-  FONDO_MONETARIO = "Fondo monetario",
+  FONDO_MONETARIO = "Fondos monetarios",
   NO_USADOS = "No usados"
 }

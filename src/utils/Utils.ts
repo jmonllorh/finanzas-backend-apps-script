@@ -67,10 +67,11 @@ class Utils {
     rows: unknown[][],
     startRowIndex: number,
     endRowIndex: number,
-    matches: (label: string) => boolean
+    matches: (label: string) => boolean,
+    columnIndex = 0
   ): number {
     for (let rowIndex = startRowIndex; rowIndex < endRowIndex; rowIndex++) {
-      const label = Utils.readText(rows[rowIndex][0]);
+      const label = Utils.readText(rows[rowIndex][columnIndex]);
       if (label && matches(Utils.normalizeLabel(label))) {
         return rowIndex;
       }
@@ -82,13 +83,19 @@ class Utils {
     value: unknown,
     note: unknown,
     unit: UnidadValue
-  ): ValorWrapperDTO {
+  ): RegistroWrapperDTO {
     const textNote = Utils.readText(note);
     return {
       valor: Utils.readNumber(value),
       unidad: unit,
       ...(textNote === null ? {} : { nota: textNote })
     };
+  }
+
+  static createPercentageWrapper(value: unknown, note: unknown): RegistroWrapperDTO {
+    const result = Utils.createValueWrapper(value, note, UnidadValue.Porcentaje);
+    result.valor = result.valor === null ? null : result.valor * 100;
+    return result;
   }
 
   static readDate(value: unknown): Date | null {
@@ -99,11 +106,32 @@ class Utils {
     return Number.isFinite(timestamp) ? new Date(timestamp) : null;
   }
 
-   static findColumn(headers: string[], header: string): number {
+  static findColumn(headers: string[], header: string): number {
     const index = headers.indexOf(header);
     if (index === -1) {
       throw new Error(`No se encontró la columna "${header}" dentro de "${headers}".`);
     }
     return index;
+  }
+
+  static obtenerTipoActivoDesglosado(
+    label: string,
+  ): TipoActivoValue {
+    switch (Utils.normalizeLabel(label)) {
+      case "bancos":
+        return TipoActivoValue.Bancos;
+      case "depositos":
+        return TipoActivoValue.Depositos;
+      case "renta variable":
+        return TipoActivoValue.RentaVariable;
+      case "fondo monetario":
+        return TipoActivoValue.FondoMonetario;
+      case "neuberger":
+        return TipoActivoValue.RentaFija;
+      case "total":
+        return TipoActivoValue.Total;
+      default:
+        throw new Error(`El tipo de activo "${label}" no está definido.`);
+    }
   }
 }
