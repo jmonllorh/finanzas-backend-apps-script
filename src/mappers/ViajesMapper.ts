@@ -5,6 +5,10 @@ interface ColumnasViaje {
   total: number;
 }
 
+/**
+ * Recorre la fila superior para descubrir los años y valida el bloque de cuatro columnas
+ * de cada uno. Mapea viajes y gastos hasta la fila con la fórmula del total anual.
+ */
 function crearViajesDTO(
   sheet: GoogleAppsScript.Spreadsheet.Sheet
 ): ViajesDTO[] {
@@ -51,6 +55,10 @@ function crearViajesDTO(
   return result;
 }
 
+/**
+ * Comprueba que el bloque tenga las columnas Viaje, Importes, Comentario y Total
+ * en el orden esperado, y devuelve sus índices absolutos dentro de la hoja.
+ */
 function crearColumnasViaje(
   headers: unknown[],
   startColumn: number
@@ -77,6 +85,10 @@ function crearColumnasViaje(
   return columnas;
 }
 
+/**
+ * Busca una fórmula SUM en la columna Total que no pertenezca a un viaje ni a un gasto.
+ * Devuelve esa fila como límite del bloque o lanza error si no encuentra el total.
+ */
 function encontrarFilaTotalAnual(
   rows: unknown[][],
   formulas: string[][],
@@ -102,6 +114,11 @@ function encontrarFilaTotalAnual(
   );
 }
 
+/**
+ * Crea un viaje al encontrar su nombre y añade los gastos de las filas siguientes.
+ * Las celdas combinadas dejan el nombre vacío en filas posteriores, que continúan
+ * asociándose al viaje actual; un gasto sin viaje se considera un error.
+ */
 function crearViajesDelAño(
   rows: unknown[][],
   notes: string[][],

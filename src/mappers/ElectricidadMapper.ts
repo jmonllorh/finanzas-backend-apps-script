@@ -7,6 +7,10 @@ interface FilasElectricidad {
   precioPotenciaTotal: number;
 }
 
+/**
+ * Recorre los bloques anuales, valida sus meses y mapea para cada mes el importe,
+ * el consumo y los precios de energía y potencia, incluyendo sus notas.
+ */
 function crearElectricidadDTO(
   sheet: GoogleAppsScript.Spreadsheet.Sheet
 ): ElectricidadDTO[] {
@@ -78,6 +82,10 @@ function crearElectricidadDTO(
   return result;
 }
 
+/**
+ * Busca las filas de importe, consumo, precio de energía y precios de potencia
+ * por etiqueta dentro del bloque anual; los límites evitan cruzar al año siguiente.
+ */
 function buscarFilasElectricidad(
   rows: unknown[][],
   startRowIndex: number,

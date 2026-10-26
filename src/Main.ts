@@ -17,7 +17,6 @@ interface ApiResponse {
 }
 
 // TODO- Analizar profundamente los DTOS y valorar si mejorar la distribución de datos (cambiar { valor, unidad } y meter en mismo nivel, revisar strings vs enums tipos activos)
-// TODO- Añadir comentarios a métodos mappers
 /**
  * Función de entrada para peticiones HTTP GET.
  * @param e Objeto de evento HTTP proporcionado por Apps Script.

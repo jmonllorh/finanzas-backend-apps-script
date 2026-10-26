@@ -181,7 +181,7 @@ test("InversionesMapperTests - mapea registros, totales y depósitos", () => {
     }
   );
   assert.equal(dto.fondos.items[0].valorMaximoVivienda.valor, 80000);
-  assert.equal(dto.fondos.totales.length, 4);
+  assert.equal(dto.fondos.totales.length, 5);
   assert.equal(dto.fondos.totales[0].tipo, "Bancos");
   assert.equal(dto.fondos.totales[0].valor.valor, 1000);
   assert.equal(dto.fondos.totales[0].beneficio, null);
@@ -194,6 +194,10 @@ test("InversionesMapperTests - mapea registros, totales y depósitos", () => {
   assert.equal(dto.fondos.totales[2].ganancia, null);
   assert.equal(dto.fondos.totales[3].beneficio.valor, 250);
   assert.equal(dto.fondos.totales[3].ganancia.valor, 50);
+  assert.equal(dto.fondos.totales[4].tipo, "Total");
+  assert.equal(dto.fondos.totales[4].valor.valor, 6700);
+  assert.equal(dto.fondos.totales[4].beneficio, null);
+  assert.equal(dto.fondos.totales[4].ganancia, null);
   assert.equal(dto.fondos.colchonSeguridadVivienda.valor, 15000);
   assert.equal(dto.depositos.items.length, 1);
   assert.equal(dto.depositos.items[0].entidad, "Depósito A");
@@ -216,6 +220,8 @@ test("InversionesMapperTests - localiza los totales aunque cambien de fila", () 
   assert.equal(dto.fondos.totales[2].valor.valor, 800);
   assert.equal(dto.fondos.totales[3].beneficio.valor, 250);
   assert.equal(dto.fondos.totales[3].ganancia.valor, 50);
+  assert.equal(dto.fondos.totales[4].tipo, "Total");
+  assert.equal(dto.fondos.totales[4].valor.valor, 6700);
   assert.equal(dto.depositos.importeTotalActivos.valor, 0);
   assert.equal(dto.depositos.interesesTotales.valor, 679.752);
 });

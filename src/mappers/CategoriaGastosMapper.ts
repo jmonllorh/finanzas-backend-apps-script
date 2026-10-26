@@ -1,3 +1,7 @@
+/**
+ * Recorre los bloques por año, valida sus encabezados mensuales y localiza la fila
+ * de totales mediante su fórmula SUM. Las filas anteriores se tratan como gastos.
+ */
 function crearCategoriaGastosDTO(
   sheet: GoogleAppsScript.Spreadsheet.Sheet
 ): CategoriaGastosDTO[] {
@@ -55,6 +59,10 @@ function crearCategoriaGastosDTO(
   return result;
 }
 
+/**
+ * Construye los doce meses a partir de las filas del bloque. Omite importes vacíos,
+ * conserva las notas de los importes y adjunta el total correspondiente a cada mes.
+ */
 function crearCategoriaGastosDTODesdeFilas(
   año: number,
   columnasMeses: ColumnaMes[],

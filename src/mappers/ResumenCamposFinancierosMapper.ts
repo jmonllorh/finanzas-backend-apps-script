@@ -1,9 +1,17 @@
+/**
+ * Localiza cada campo financiero por el encabezado de la hoja y devuelve wrappers en euros.
+ * Internet puede faltar en hojas antiguas; «Total gastos» se acepta como alias del encabezado común.
+ */
 function crearResumenCamposFinancierosDTO(
   headers: unknown[],
   row: unknown[],
   notes: string[]
 ): ResumenCamposFinancierosDTO {
   const headerTexts = headers.map((header) => Utils.readText(header) ?? "");
+  /**
+   * Busca un encabezado o sus alternativas y lee el valor de esa columna.
+   * Si es opcional y no existe, devuelve un wrapper vacío; en otro caso lanza error.
+   */
   const readField = (
     header: string,
     optional = false,

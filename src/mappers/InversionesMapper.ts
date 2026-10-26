@@ -13,6 +13,7 @@ const COLUMNAS_INVERSIONES = {
   valorAgregado: { indice: 11, encabezado: "Valor" },
   beneficioAgregado: { indice: 12, encabezado: "Beneficio mensual" },
   gananciaAgregado: { indice: 13, encabezado: "Ganancia" },
+  valorTotalAgregado: { indice: 14, encabezado: "Valor total" },
   valorMaximoVivienda: { indice: 15, encabezado: "Máxima vivienda" },
   colchonSeguridadVivienda: { indice: 16, encabezado: "Colchón seguridad vivienda" },
   entidad: { indice: 19, encabezado: "Entidad" },
@@ -25,6 +26,10 @@ const COLUMNAS_INVERSIONES = {
   activo: { indice: 26, encabezado: "Activo" }
 } as const;
 
+/**
+ * Valida la estructura de columnas y crea los bloques de fondos y depósitos.
+ * Lee valores y notas juntos para conservar las anotaciones en el DTO resultante.
+ */
 function crearInversionesDTO(
   sheet: GoogleAppsScript.Spreadsheet.Sheet
 ): InversionesDTO {
@@ -83,6 +88,10 @@ function crearInversionesDTO(
   return dto;
 }
 
+/**
+ * Recorre las filas desde el primer registro, omite fechas vacías y exige fechas válidas.
+ * Para cada fila crea bancos, fondos, renta variable y el activo Total del agregado.
+ */
 function crearRegistrosMensualesFondo(
   rows: unknown[][],
   notes: string[][],
@@ -158,6 +167,10 @@ function crearRegistrosMensualesFondo(
   return result;
 }
 
+/**
+ * Busca desde la primera fila de datos la primera celda no vacía de Fecha.
+ * Devuelve su índice si contiene una fecha válida; falla ante fechas inválidas o ausentes.
+ */
 function encontrarPrimeraFilaMensual(
   rows: unknown[][]
 ): number {
@@ -174,6 +187,10 @@ function encontrarPrimeraFilaMensual(
   throw new Error("La hoja no contiene registros mensuales de fondos.");
 }
 
+/**
+ * Compara los encabezados de la hoja con los nombres definidos junto a cada índice.
+ * Normaliza acentos y mayúsculas; informa la posición esperada si detecta cambios.
+ */
 function validarEncabezadosInversiones(headers: unknown[]): void {
   for (const { indice, encabezado } of Object.values(COLUMNAS_INVERSIONES)) {
     const actual = Utils.readText(headers[indice]);
@@ -188,6 +205,10 @@ function validarEncabezadosInversiones(headers: unknown[]): void {
   }
 }
 
+/**
+ * Mapea el valor principal y los campos disponibles para el tipo de activo.
+ * Los campos sin columna configurada se representan como null, no como wrappers vacíos.
+ */
 function crearActivoFondo(
   tipo: TipoActivoValue,
   row: unknown[],
@@ -232,6 +253,10 @@ function crearActivoFondo(
   return dto;
 }
 
+/**
+ * Construye los totales de bancos, fondos, rentas y el activo Total del agregado.
+ * Localiza los valores por etiqueta en las columnas resumen, sin fijar la fila concreta.
+ */
 function crearTotalesFondo(
   rows: unknown[][],
   notes: string[][]
@@ -285,10 +310,23 @@ function crearTotalesFondo(
         "Ganancia total",
         true
       )
+    ),
+    crearTotalFondo(
+      TipoActivoValue.Total,
+      leerValorDebajoEtiqueta(
+        rows,
+        notes,
+        COLUMNAS_INVERSIONES.valorTotalAgregado.indice,
+        "Valor total"
+      )
     )
   ];
 }
 
+/**
+ * Asigna al DTO el tipo de activo y sus wrappers de valor, beneficio y ganancia.
+ * Beneficio y ganancia son opcionales para activos que no tienen esos datos.
+ */
 function crearTotalFondo(
   tipo: TipoActivoValue,
   valor: RegistroWrapperDTO,
@@ -303,6 +341,10 @@ function crearTotalFondo(
   return dto;
 }
 
+/**
+ * Busca el valor numérico que sigue a una etiqueta en una columna y conserva su nota.
+ * Devuelve un wrapper en euros o, si percentage es true, convierte la fracción a porcentaje.
+ */
 function leerValorDebajoEtiqueta(
   rows: unknown[][],
   notes: string[][],
@@ -327,6 +369,10 @@ function leerValorDebajoEtiqueta(
       );
 }
 
+/**
+ * Encuentra la etiqueta en la columna indicada y avanza hasta la primera celda numérica.
+ * Así admite filas vacías entre etiqueta y valor; falla si no hay un número posterior.
+ */
 function encontrarFilaSiguienteValor(
   rows: unknown[][],
   columnIndex: number,
@@ -347,6 +393,10 @@ function encontrarFilaSiguienteValor(
   throw new Error(`No se encontró un valor numérico después de "${label}".`);
 }
 
+/**
+ * Lee las filas con entidad como depósitos, excluyendo las etiquetas de deuda y total.
+ * Exige fechas de inicio/vencimiento y estado Sí/No antes de construir cada DTO.
+ */
 function crearDepositos(
   rows: unknown[][],
   notes: string[][]

@@ -1,3 +1,7 @@
+/**
+ * Localiza las filas de total y media mensual, mapea los años intermedios y añade
+ * los campos financieros, los valores agregados y el bloque de activos.
+ */
 function crearDesgloseTotalDTO(
   sheet: GoogleAppsScript.Spreadsheet.Sheet
 ): DesgloseTotalDTO {
@@ -64,6 +68,10 @@ function crearDesgloseTotalDTO(
   return dto;
 }
 
+/**
+ * Convierte una fila anual o total en un DTO: primero asigna los campos financieros
+ * compartidos y después mapea viajes, bonos/ayudas/renta e ingresos totales.
+ */
 function crearDesgloseFinancieroDesdeFila(
   headers: unknown[],
   row: unknown[],
@@ -98,6 +106,10 @@ function crearDesgloseFinancieroDesdeFila(
   return dto;
 }
 
+/**
+ * Busca el encabezado exacto en la fila de cabeceras y envuelve el valor y su nota
+ * como importe en euros. Falla si la columna no está presente.
+ */
 function crearValorDesgloseTotal(
   row: unknown[],
   notes: string[],
@@ -115,6 +127,10 @@ function crearValorDesgloseTotal(
   );
 }
 
+/**
+ * Encuentra el inicio del bloque en «Bancos» y mapea cada activo hasta «Total»,
+ * conservando el valor y las notas de cada fila.
+ */
 function crearActivosDesglosados(
   rows: unknown[][],
   notes: string[][],

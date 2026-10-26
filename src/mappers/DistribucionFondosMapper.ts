@@ -1,3 +1,8 @@
+/**
+ * Recorre las filas de MyInvestor: las etiquetas de categoría actualizan la categoría
+ * activa y las filas con datos generan un fondo con sus porcentajes, importes e ISIN.
+ * Ignora las filas vacías.
+ */
 function crearDistribucionFondosDTO(
   sheet: GoogleAppsScript.Spreadsheet.Sheet
 ): DistribucionFondoDTO[] {
@@ -51,6 +56,10 @@ function crearDistribucionFondosDTO(
   return result;
 }
 
+/**
+ * Compara la etiqueta normalizada con los valores de CategoriaFondo y devuelve
+ * la categoría correspondiente, o undefined cuando la fila no es una categoría.
+ */
 function obtenerCategoriaFondo(
   label: string
 ): CategoriaFondo | undefined {

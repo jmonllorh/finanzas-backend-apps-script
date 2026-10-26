@@ -4,6 +4,10 @@ interface ColumnaMes {
 }
 
 class Utils {
+  /**
+   * Convierte un valor de celda a texto, preservando cadenas y serializando otros tipos.
+   * Trata "", null y undefined como ausencia de valor.
+   */
   static readText(value: unknown): string | null {
     if (value === "" || value === null || value === undefined) {
       return null;
@@ -11,6 +15,10 @@ class Utils {
     return typeof value === "string" ? value : String(value);
   }
 
+  /**
+   * Convierte números o cadenas numéricas a number.
+   * Devuelve null para celdas vacías, valores no numéricos o números no finitos.
+   */
   static readNumber(value: unknown): number | null {
     if (value === null || (typeof value === "string" && value.trim() === "")) {
       return null;
@@ -23,6 +31,10 @@ class Utils {
     return Number.isFinite(number) ? number : null;
   }
 
+  /**
+   * Lee el valor como número y lo acepta como año solo si es entero y >= 1900.
+   * Devuelve null si no cumple esas condiciones.
+   */
   static readYear(value: unknown): number | null {
     const year = Utils.readNumber(value);
     return year !== null && Number.isInteger(year) && year >= 1900
@@ -30,6 +42,10 @@ class Utils {
       : null;
   }
 
+  /**
+   * Valida los doce encabezados de mes, en el orden de MesValue, desde la columna inicial.
+   * Devuelve cada mes junto al índice de su columna y falla si algún encabezado no coincide.
+   */
   static createMonthColumns(
     headers: unknown[],
     firstMonthColumnIndex: number
@@ -46,6 +62,10 @@ class Utils {
     });
   }
 
+  /**
+   * Busca desde startRowIndex la siguiente fila cuyo primer valor sea un año válido.
+   * Si no encuentra otro bloque anual, devuelve rows.length.
+   */
   static findNextYearRow(rows: unknown[][], startRowIndex: number): number {
     for (let rowIndex = startRowIndex; rowIndex < rows.length; rowIndex++) {
       if (Utils.readYear(rows[rowIndex][0]) !== null) {
@@ -55,6 +75,10 @@ class Utils {
     return rows.length;
   }
 
+  /**
+   * Normaliza etiquetas para compararlas sin distinguir acentos, mayúsculas ni espacios extremos.
+   * No elimina otros signos ni modifica los espacios interiores.
+   */
   static normalizeLabel(value: string): string {
     return value
       .normalize("NFD")
@@ -63,6 +87,10 @@ class Utils {
       .trim();
   }
 
+  /**
+   * Recorre el rango [startRowIndex, endRowIndex) de la columna indicada y devuelve la primera
+   * fila cuya etiqueta normalizada satisface matches. Usa la primera columna por defecto.
+   */
   static findRowIndex(
     rows: unknown[][],
     startRowIndex: number,
@@ -79,6 +107,10 @@ class Utils {
     throw new Error(`No se encontró la fila en la hoja.`);
   }
 
+  /**
+   * Construye el wrapper de un valor numérico, convirtiendo entradas inválidas a null.
+   * Añade la unidad indicada y solo incluye nota cuando la celda contiene texto.
+   */
   static createValueWrapper(
     value: unknown,
     note: unknown,
@@ -92,12 +124,20 @@ class Utils {
     };
   }
 
+  /**
+   * Crea un wrapper porcentual multiplicando por 100 los valores numéricos de entrada.
+   * Si el valor no es válido, conserva null; la nota se procesa como en createValueWrapper.
+   */
   static createPercentageWrapper(value: unknown, note: unknown): RegistroWrapperDTO {
     const result = Utils.createValueWrapper(value, note, UnidadValue.Porcentaje);
     result.valor = result.valor === null ? null : result.valor * 100;
     return result;
   }
 
+  /**
+   * Acepta únicamente objetos Date con marca temporal válida y devuelve una copia.
+   * Para cadenas, otros tipos o fechas inválidas devuelve null.
+   */
   static readDate(value: unknown): Date | null {
     if (Object.prototype.toString.call(value) !== "[object Date]") {
       return null;
@@ -106,6 +146,10 @@ class Utils {
     return Number.isFinite(timestamp) ? new Date(timestamp) : null;
   }
 
+  /**
+   * Busca una coincidencia exacta del encabezado y devuelve su índice.
+   * Lanza un error con el encabezado buscado si no aparece en la fila.
+   */
   static findColumn(headers: string[], header: string): number {
     const index = headers.indexOf(header);
     if (index === -1) {
@@ -114,6 +158,10 @@ class Utils {
     return index;
   }
 
+  /**
+   * Normaliza las etiquetas de activos conocidas en la hoja y las convierte a TipoActivoValue.
+   * Lanza un error si la etiqueta no forma parte de las equivalencias admitidas.
+   */
   static obtenerTipoActivoDesglosado(
     label: string,
   ): TipoActivoValue {

@@ -7,6 +7,10 @@ interface ColumnasEvolucionSalario {
   comentarios: number;
 }
 
+/**
+ * Lee los encabezados una vez, obtiene sus índices y procesa cada fila salarial.
+ * Descarta filas completamente vacías y conserva las notas asociadas a los campos.
+ */
 function crearEvolucionSalarioDTOs(
   sheet: GoogleAppsScript.Spreadsheet.Sheet
 ): EvolucionSalarioDTO[] {
@@ -33,6 +37,10 @@ function crearEvolucionSalarioDTOs(
   return result;
 }
 
+/**
+ * Resuelve por nombre las columnas obligatorias de salario y comentarios.
+ * Si falta un encabezado, Utils.findColumn informa del error.
+ */
 function crearColumnasEvolucionSalario(
   headers: string[]
 ): ColumnasEvolucionSalario {
@@ -46,6 +54,10 @@ function crearColumnasEvolucionSalario(
   };
 }
 
+/**
+ * Convierte una fila en EvolucionSalarioDTO usando los índices previamente resueltos.
+ * Los incrementos se expresan como porcentajes y el resto de importes en euros.
+ */
 function crearEvolucionSalarioDTODesdeFila(
   row: unknown[],
   notas: string[],

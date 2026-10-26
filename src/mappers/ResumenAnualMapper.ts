@@ -1,9 +1,16 @@
+/**
+ * Aplica el mapper individual a cada hoja anual y conserva el orden recibido.
+ */
 function crearResumenesAnualesDTO(
   sheets: GoogleAppsScript.Spreadsheet.Sheet[]
 ): ResumenAnualDTO[] {
   return sheets.map((sheet) => crearResumenAnualDTO(sheet));
 }
 
+/**
+ * Valida el año y las filas mensuales, localiza total y media mensual y mapea
+ * sus campos financieros; añade viajes y bonos/ayudas/renta al total anual.
+ */
 function crearResumenAnualDTO(
   sheet: GoogleAppsScript.Spreadsheet.Sheet
 ): ResumenAnualDTO {
