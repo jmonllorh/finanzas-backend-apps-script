@@ -5,11 +5,13 @@ class AnnualSummaryDTO {
   monthlyAverage!: FinancialSummaryFieldsDTO;
 }
 
-class MonthlySummaryDTO extends FinancialSummaryFieldsDTO {
+interface MonthlySummaryDTO extends FinancialSummaryFieldsDTO {}
+class MonthlySummaryDTO {
   month!: Month;
 }
 
-class AnnualTotalDTO extends FinancialSummaryFieldsDTO {
+interface AnnualTotalDTO extends FinancialSummaryFieldsDTO {}
+class AnnualTotalDTO {
   travelExpenses!: number | null;
   travelExpensesNote?: string;
   bonusesAndBenefits!: number | null;

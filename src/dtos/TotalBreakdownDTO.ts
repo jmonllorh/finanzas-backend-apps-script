@@ -5,7 +5,8 @@ class TotalBreakdownDTO {
   assets!: BreakdownAssetDTO[];
 }
 
-class FinancialBreakdownDTO extends FinancialSummaryFieldsDTO {
+interface FinancialBreakdownDTO extends FinancialSummaryFieldsDTO {}
+class FinancialBreakdownDTO {
   year!: number | null;
   travelExpenses!: number | null;
   travelExpensesNote?: string;
