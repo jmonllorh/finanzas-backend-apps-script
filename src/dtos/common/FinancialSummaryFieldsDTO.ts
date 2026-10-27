@@ -1,0 +1,34 @@
+class FinancialSummaryFieldsDTO {
+  rent!: number | null;
+  rentNote?: string;
+  electricity!: number | null;
+  electricityNote?: string;
+  water!: number | null;
+  waterNote?: string;
+  internet!: number | null;
+  internetNote?: string;
+  investments!: number | null;
+  investmentsNote?: string;
+  subscriptions!: number | null;
+  subscriptionsNote?: string;
+  medicalExpenses!: number | null;
+  medicalExpensesNote?: string;
+  foodAndCleaning!: number | null;
+  foodAndCleaningNote?: string;
+  leisure!: number | null;
+  leisureNote?: string;
+  sports!: number | null;
+  sportsNote?: string;
+  transportation!: number | null;
+  transportationNote?: string;
+  otherExpenses!: number | null;
+  otherExpensesNote?: string;
+  netSavings!: number | null;
+  netSavingsNote?: string;
+  grossSavings!: number | null;
+  grossSavingsNote?: string;
+  totalExpenses!: number | null;
+  totalExpensesNote?: string;
+  regularIncome!: number | null;
+  regularIncomeNote?: string;
+}

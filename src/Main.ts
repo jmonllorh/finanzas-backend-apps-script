@@ -4,7 +4,6 @@
  * @returns Respuesta JSON con los datos financieros disponibles en la hoja de cálculo.
  */
 // TODO- Añadir .md con la definición funcional del servicio, explicando cada campo de la respuesta, sus valores posibles, la unidad de medida de cada valor, etc
-// TODO- Cambiar nombre métodos, clases y ficheros a inglés
 function doGet(e: GoogleAppsScript.Events.DoGet): GoogleAppsScript.Content.TextOutput {
   let spreadsheetId: string | null;
   try {
@@ -13,13 +12,13 @@ function doGet(e: GoogleAppsScript.Events.DoGet): GoogleAppsScript.Content.TextO
       .getProperty("SPREADSHEET_ID");
   } catch (error) {
     Logger.log(error);
-    return crearRespuestaError(
-      "No se pudo leer la propiedad SPREADSHEET_ID de Script Properties."
+    return createErrorResponse(
+      "Could not read the SPREADSHEET_ID Script Property."
     );
   }
   if (spreadsheetId === null || spreadsheetId.trim() === "") {
-    return crearRespuestaError(
-      "La propiedad SPREADSHEET_ID de Script Properties no está configurada o está vacía."
+    return createErrorResponse(
+      "The SPREADSHEET_ID Script Property is not configured or is empty."
     );
   }
 
@@ -27,62 +26,62 @@ function doGet(e: GoogleAppsScript.Events.DoGet): GoogleAppsScript.Content.TextO
     spreadsheetId.trim()
   );
 
-  const sheetEvolucionSalario = ss.getSheetByName("Evolución salario");
-  const sheetComidaLimpieza = ss.getSheetByName("Comida/Limpieza");
-  const sheetOcio = ss.getSheetByName("Ocio");
-  const sheetDeporte = ss.getSheetByName("Deporte");
-  const sheetTransporte = ss.getSheetByName("Transporte");
-  const sheetOtros = ss.getSheetByName("Otros");
-  const sheetElectricidad = ss.getSheetByName("Electricidad");
-  const sheetAgua = ss.getSheetByName("Agua");
-  const sheetViajes = ss.getSheetByName("Viajes");
-  const sheetInversiones = ss.getSheetByName("Inversiones");
-  const sheetDistribucionFondos = ss.getSheetByName("MyInvestor");
-  const sheetDesgloseTotal = ss.getSheetByName("Desglose total");
-  const sheetsResumenesAnuales = ss.getSheets().filter(
+  const sheetSalaryEvolution = ss.getSheetByName("Evolución salario");
+  const sheetFoodAndCleaning = ss.getSheetByName("Comida/Limpieza");
+  const sheetLeisure = ss.getSheetByName("Ocio");
+  const sheetSports = ss.getSheetByName("Deporte");
+  const sheetTransportation = ss.getSheetByName("Transporte");
+  const sheetOtherExpenses = ss.getSheetByName("Otros");
+  const sheetElectricity = ss.getSheetByName("Electricidad");
+  const sheetWater = ss.getSheetByName("Agua");
+  const sheetTravel = ss.getSheetByName("Viajes");
+  const sheetInvestments = ss.getSheetByName("Inversiones");
+  const sheetFundAllocations = ss.getSheetByName("MyInvestor");
+  const sheetTotalBreakdown = ss.getSheetByName("Desglose total");
+  const sheetsAnnualSummaries = ss.getSheets().filter(
     (sheet) => /^Resumen \d{4}$/.test(sheet.getName())
   );
 
-  const response = new RespuestaFinancieraDTO();
+  const response = new FinancialResponseDTO();
   response.status = "success";
-  response.resumenesAnuales = sheetsResumenesAnuales.length > 0
-    ? crearResumenesAnualesDTO(sheetsResumenesAnuales)
+  response.annualSummaries = sheetsAnnualSummaries.length > 0
+    ? mapAnnualSummaries(sheetsAnnualSummaries)
     : null;
-  response.evolucionSalarial = sheetEvolucionSalario
-    ? crearEvolucionSalarioDTOs(sheetEvolucionSalario)
+  response.salaryEvolution = sheetSalaryEvolution
+    ? mapSalaryEvolution(sheetSalaryEvolution)
     : null;
-  response.comidaLimpieza = sheetComidaLimpieza
-    ? crearCategoriaGastosDTO(sheetComidaLimpieza)
+  response.foodAndCleaning = sheetFoodAndCleaning
+    ? mapExpenseCategories(sheetFoodAndCleaning)
     : null;
-  response.ocio = sheetOcio
-    ? crearCategoriaGastosDTO(sheetOcio)
+  response.leisure = sheetLeisure
+    ? mapExpenseCategories(sheetLeisure)
     : null;
-  response.deporte = sheetDeporte
-    ? crearCategoriaGastosDTO(sheetDeporte)
+  response.sports = sheetSports
+    ? mapExpenseCategories(sheetSports)
     : null;
-  response.transporte = sheetTransporte
-    ? crearCategoriaGastosDTO(sheetTransporte)
+  response.transportation = sheetTransportation
+    ? mapExpenseCategories(sheetTransportation)
     : null;
-  response.otros = sheetOtros
-    ? crearCategoriaGastosDTO(sheetOtros)
+  response.otherExpenses = sheetOtherExpenses
+    ? mapExpenseCategories(sheetOtherExpenses)
     : null;
-  response.electricidad = sheetElectricidad
-    ? crearElectricidadDTO(sheetElectricidad)
+  response.electricity = sheetElectricity
+    ? mapElectricityData(sheetElectricity)
     : null;
-  response.agua = sheetAgua
-    ? crearAguaDTO(sheetAgua)
+  response.water = sheetWater
+    ? mapWaterData(sheetWater)
     : null;
-  response.viajes = sheetViajes
-    ? crearViajesDTO(sheetViajes)
+  response.travel = sheetTravel
+    ? mapTravelData(sheetTravel)
     : null;
-  response.inversiones = sheetInversiones
-    ? crearInversionesDTO(sheetInversiones)
+  response.investments = sheetInvestments
+    ? mapInvestments(sheetInvestments)
     : null;
-  response.distribucionFondos = sheetDistribucionFondos
-    ? crearDistribucionFondosDTO(sheetDistribucionFondos)
+  response.fundAllocations = sheetFundAllocations
+    ? mapFundAllocations(sheetFundAllocations)
     : null;
-  response.desgloseTotal = sheetDesgloseTotal
-    ? crearDesgloseTotalDTO(sheetDesgloseTotal)
+  response.totalBreakdown = sheetTotalBreakdown
+    ? mapTotalBreakdown(sheetTotalBreakdown)
     : null;
 
   return ContentService
@@ -95,10 +94,10 @@ function doGet(e: GoogleAppsScript.Events.DoGet): GoogleAppsScript.Content.TextO
  * @param message Descripción del error que recibirá el consumidor del servicio.
  * @returns Respuesta HTTP con estado de error y mensaje en formato JSON.
  */
-function crearRespuestaError(
+function createErrorResponse(
   message: string
 ): GoogleAppsScript.Content.TextOutput {
-  const response = new RespuestaFinancieraDTO();
+  const response = new FinancialResponseDTO();
   response.status = "error";
   response.message = message;
   return ContentService
