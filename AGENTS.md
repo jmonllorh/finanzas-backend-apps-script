@@ -2,7 +2,7 @@
 
 El objetivo de este proyecto es devolver un modelo de datos basado en el contenido de `assets/Hoja.xlsx`, leyéndolo mediante Google Apps Scripts.
 
-- Puedes simular una ejecución del script haciendo esta llamada: https://script.google.com/macros/s/AKfycbyLvfrjJwdN5yfjrMoYuRxex4Vf6he78nsPH3cJavNH3rw2Gu69mbGZRdhGOAIlADcjDA/dev.
+- Puedes simular una ejecución del script usando el `deploymentId` local de `.clasp.json` en `https://script.google.com/macros/s/{deploymentId}/dev`.
 - Cada vez que quieras probar algo, ejecuta npm run deploy y cuando termine, lanza la llamada al servicio para verificar los resultados.
 - Siempre que lances el servicio, actualiza el `assets/response.json` incluyendo la respuesta recibida, formateando el contenido json.
 

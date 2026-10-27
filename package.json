@@ -9,6 +9,6 @@
     "build": "npm run clean && tsc && copyfiles -f src/appsscript.json dist",
     "test": "npm run build && node --test \"src\\tests\\**\\*.test.js\"",
     "push": "npm run build && clasp push",
-    "deploy": "npm run push && clasp deploy --deploymentId AKfycbyLvfrjJwdN5yfjrMoYuRxex4Vf6he78nsPH3cJavNH3rw2Gu69mbGZRdhGOAIlADcjDA"
+    "deploy": "node src/deploy.js"
   }
 }
