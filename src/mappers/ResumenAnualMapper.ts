@@ -1,5 +1,7 @@
 /**
  * Aplica el mapper individual a cada hoja anual y conserva el orden recibido.
+ * @param sheets Hojas de cálculo que contienen resúmenes anuales.
+ * @returns Lista de DTO anuales en el mismo orden que las hojas recibidas.
  */
 function crearResumenesAnualesDTO(
   sheets: GoogleAppsScript.Spreadsheet.Sheet[]
@@ -9,6 +11,8 @@ function crearResumenesAnualesDTO(
 
 /**
  * Indica si el mes contiene algún valor distinto de cero o alguna nota.
+ * @param dto Datos financieros de un mes que se van a comprobar.
+ * @returns true si algún campo mensual tiene un valor significativo; false en caso contrario.
  */
 function tieneDatosMensuales(dto: ResumenMensualDTO): boolean {
   return Object.entries(dto).some(([campo, valor]) => {
@@ -25,6 +29,8 @@ function tieneDatosMensuales(dto: ResumenMensualDTO): boolean {
 /**
  * Valida el año y las filas mensuales, localiza total y media mensual y mapea
  * sus campos financieros; añade viajes y bonos/ayudas/renta al total anual.
+ * @param sheet Hoja de cálculo correspondiente a un resumen anual.
+ * @returns DTO con el año, los meses, el total y la media mensual.
  */
 function crearResumenAnualDTO(
   sheet: GoogleAppsScript.Spreadsheet.Sheet

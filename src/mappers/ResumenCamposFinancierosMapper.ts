@@ -1,6 +1,10 @@
 /**
  * Localiza cada campo financiero por el encabezado de la hoja y devuelve sus valores y notas.
  * Internet puede faltar en hojas antiguas; «Total gastos» se acepta como alias del encabezado común.
+ * @param headers Encabezados de las columnas financieras.
+ * @param row Fila de valores financieros que se va a convertir.
+ * @param notes Notas asociadas a las celdas de la fila.
+ * @returns DTO con los campos financieros y sus notas disponibles.
  */
 function crearResumenCamposFinancierosDTO(
   headers: unknown[],
@@ -11,6 +15,10 @@ function crearResumenCamposFinancierosDTO(
   /**
    * Busca un encabezado o sus alternativas y lee el valor de esa columna.
    * Si es opcional y no existe, devuelve cero sin nota; en otro caso lanza error.
+   * @param header Nombre principal del encabezado que se quiere localizar.
+   * @param optional Indica si se permite que el encabezado no exista.
+   * @param alternatives Nombres alternativos válidos para el encabezado principal.
+   * @returns Tupla con el valor numérico leído y su nota opcional.
    */
   const readField = (
     header: string,

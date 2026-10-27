@@ -72,3 +72,14 @@ test("DistribucionFondosMapperTests - asigna categorías y normaliza porcentajes
   assert.equal(dtos[4].peso, null);
   assert.equal(dtos[4].cantidadMensual, null);
 });
+
+test("DistribucionFondosMapperTests - omite fondos sin datos aunque sus celdas tengan espacios", () => {
+  const rows = [
+    ["Fondo", "Peso", "Cantidad mensual", "ISIN", "Nombre técnico", "Comisión"],
+    ["Fondos indexados"],
+    ["Fondo vacío", " ", "   ", " ", "  ", " "]
+  ];
+  const notes = rows.map(() => Array(6).fill(""));
+
+  assert.equal(mapperTests.mapSheet(rows, notes).length, 0);
+});

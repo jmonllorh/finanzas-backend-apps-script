@@ -27,6 +27,17 @@ class EvolucionSalarioMapperTests {
       this.context
     );
   }
+
+  mapSheet(rows, notes) {
+    this.context.sheet = {
+      getName: () => "Evolución salario",
+      getDataRange: () => ({
+        getValues: () => rows,
+        getNotes: () => notes
+      })
+    };
+    return vm.runInContext("crearEvolucionSalarioDTOs(sheet)", this.context);
+  }
 }
 
 const mapperTests = new EvolucionSalarioMapperTests();
@@ -59,4 +70,20 @@ test("EvolucionSalarioMapperTests - rellena un DTO desde una fila aislada", () =
       comentarios: "Subida anual"
     }
   );
+});
+
+test("EvolucionSalarioMapperTests - omite filas que solo contienen espacios", () => {
+  const rows = [
+    [
+      "Fecha",
+      "Salario bruto anual",
+      "Incremento bruto anual",
+      "Salario neto mensual",
+      "Incremento neto mensual",
+      "Comentarios"
+    ],
+    [" ", "   ", " ", "  ", " ", "   "]
+  ];
+
+  assert.equal(mapperTests.mapSheet(rows, rows.map(() => Array(6).fill(""))).length, 0);
 });

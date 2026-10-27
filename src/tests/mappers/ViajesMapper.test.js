@@ -47,6 +47,7 @@ test("ViajesMapperTests - mapea años, viajes, gastos y totales", () => {
     ["", "", "", "", "", 50, "Gasolina", ""],
     ["", "", "", "", "", "", "", 319.3]
   ];
+  rows[5][1] = " ";
   const formulas = rows.map(() => Array(8).fill(""));
   formulas[5][3] = "=SUM(B3:B5)";
   formulas[7][7] = "=SUM(F3:F7)";

@@ -1,6 +1,8 @@
 /**
  * Recorre los bloques por año, valida sus encabezados mensuales y localiza la fila
  * de totales mediante su fórmula SUM. Las filas anteriores se tratan como gastos.
+ * @param sheet Hoja de cálculo de una categoría de gastos.
+ * @returns Lista de DTO con los gastos mensuales de cada año encontrado.
  */
 function crearCategoriaGastosDTO(
   sheet: GoogleAppsScript.Spreadsheet.Sheet
@@ -62,6 +64,13 @@ function crearCategoriaGastosDTO(
 /**
  * Construye los doce meses a partir de las filas del bloque. Omite importes vacíos,
  * conserva las notas de los importes y adjunta el total correspondiente a cada mes.
+ * @param año Año al que pertenecen las filas de gastos.
+ * @param columnasMeses Columnas validadas que relacionan cada índice con su mes.
+ * @param filasGastos Filas de gastos del bloque anual, excluida la fila de totales.
+ * @param notasGastos Notas de las celdas correspondientes a las filas de gastos.
+ * @param filaTotales Fila con el importe total de cada mes.
+ * @param notasTotales Notas asociadas a los totales mensuales.
+ * @returns DTO de gastos con sus meses, importes y totales.
  */
 function crearCategoriaGastosDTODesdeFilas(
   año: number,

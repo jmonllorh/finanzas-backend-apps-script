@@ -10,6 +10,8 @@ interface FilasElectricidad {
 /**
  * Recorre los bloques anuales, valida sus meses y mapea para cada mes el importe,
  * el consumo y los precios de energía y potencia, incluyendo sus notas.
+ * @param sheet Hoja de cálculo con los datos anuales de electricidad.
+ * @returns Lista de DTO de electricidad, uno por cada año encontrado.
  */
 function crearElectricidadDTO(
   sheet: GoogleAppsScript.Spreadsheet.Sheet
@@ -83,6 +85,10 @@ function crearElectricidadDTO(
 /**
  * Busca las filas de importe, consumo, precio de energía y precios de potencia
  * por etiqueta dentro del bloque anual; los límites evitan cruzar al año siguiente.
+ * @param rows Filas de valores de la hoja.
+ * @param startRowIndex Índice de la primera fila del bloque anual que se examina.
+ * @param endRowIndex Índice final del bloque anual, excluido.
+ * @returns Índices de las filas de importes, consumo y precios.
  */
 function buscarFilasElectricidad(
   rows: unknown[][],

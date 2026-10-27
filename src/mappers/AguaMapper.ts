@@ -7,6 +7,8 @@ interface FilasAgua {
 /**
  * Recorre los bloques anuales de la hoja y construye un DTO con sus doce meses.
  * Cada mes incluye importe, consumo y precio por litro, con sus notas.
+ * @param sheet Hoja de cálculo que contiene los datos anuales de agua.
+ * @returns Lista de DTO de agua, uno por cada año encontrado.
  */
 function crearAguaDTO(
   sheet: GoogleAppsScript.Spreadsheet.Sheet
@@ -63,6 +65,10 @@ function crearAguaDTO(
 /**
  * Localiza, dentro de los límites de un año, las filas etiquetadas como importe,
  * consumo y precio por litro. Lanza error si falta alguna de las tres.
+ * @param rows Filas de valores de la hoja.
+ * @param startRowIndex Índice de la primera fila del bloque anual que se examina.
+ * @param endRowIndex Índice final del bloque anual, excluido.
+ * @returns Índices de las filas de importe, consumo y precio por litro.
  */
 function buscarFilasAgua(
   rows: unknown[][],

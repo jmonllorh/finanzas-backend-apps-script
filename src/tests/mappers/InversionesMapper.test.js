@@ -104,6 +104,7 @@ function createInvestmentRows() {
   rows[5][25] = "Intereses totales:";
   rows[5][26] = 679.752;
   rows[6][10] = 0.5;
+  rows[7][0] = " ";
 
   const startDate = new Date(Date.UTC(2025, 0, 1));
   const endDate = new Date(Date.UTC(2025, 3, 1));

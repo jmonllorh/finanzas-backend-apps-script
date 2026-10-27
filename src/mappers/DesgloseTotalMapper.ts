@@ -1,6 +1,8 @@
 /**
  * Localiza las filas de total y media mensual, mapea los años intermedios y añade
  * los campos financieros, los valores agregados y el bloque de activos.
+ * @param sheet Hoja de cálculo que contiene el desglose financiero total.
+ * @returns DTO con los valores por año, el total, la media mensual y los activos.
  */
 function crearDesgloseTotalDTO(
   sheet: GoogleAppsScript.Spreadsheet.Sheet
@@ -69,6 +71,11 @@ function crearDesgloseTotalDTO(
 /**
  * Convierte una fila anual o total en un DTO: primero asigna los campos financieros
  * compartidos y después mapea viajes, bonos/ayudas/renta e ingresos totales.
+ * @param headers Encabezados de las columnas de la hoja.
+ * @param row Fila de valores anuales o de totales que se va a convertir.
+ * @param notes Notas asociadas a las celdas de la fila.
+ * @param año Año de la fila, o null cuando corresponde a la fila de total.
+ * @returns DTO con los campos financieros de la fila.
  */
 function crearDesgloseFinancieroDesdeFila(
   headers: unknown[],
@@ -107,6 +114,11 @@ function crearDesgloseFinancieroDesdeFila(
 /**
  * Busca el encabezado exacto en la fila de cabeceras y devuelve su valor y nota.
  * Falla si la columna no está presente.
+ * @param row Fila cuyos valores se van a leer.
+ * @param notes Notas asociadas a las celdas de la fila.
+ * @param headers Encabezados de columnas ya convertidos a texto.
+ * @param header Encabezado exacto de la columna requerida.
+ * @returns Tupla con el valor numérico de la columna y su nota opcional.
  */
 function crearValorDesgloseTotal(
   row: unknown[],
@@ -127,6 +139,10 @@ function crearValorDesgloseTotal(
 /**
  * Encuentra el inicio del bloque en «Bancos» y mapea cada activo hasta «Total»,
  * conservando el valor y las notas de cada fila.
+ * @param rows Filas de valores de la hoja.
+ * @param notes Notas asociadas a las celdas de la hoja.
+ * @param startRowIndex Índice desde el que comienza la búsqueda del bloque de activos.
+ * @returns Lista de activos desglosados, incluido el activo Total.
  */
 function crearActivosDesglosados(
   rows: unknown[][],

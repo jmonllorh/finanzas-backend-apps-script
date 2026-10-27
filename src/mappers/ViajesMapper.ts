@@ -8,6 +8,8 @@ interface ColumnasViaje {
 /**
  * Recorre la fila superior para descubrir los años y valida el bloque de cuatro columnas
  * de cada uno. Mapea viajes y gastos hasta la fila con la fórmula del total anual.
+ * @param sheet Hoja de cálculo que contiene los viajes organizados por año.
+ * @returns Lista de DTO de viajes, uno por cada año encontrado.
  */
 function crearViajesDTO(
   sheet: GoogleAppsScript.Spreadsheet.Sheet
@@ -57,6 +59,9 @@ function crearViajesDTO(
 /**
  * Comprueba que el bloque tenga las columnas Viaje, Importes, Comentario y Total
  * en el orden esperado, y devuelve sus índices absolutos dentro de la hoja.
+ * @param headers Valores de la fila con los encabezados de columnas.
+ * @param startColumn Índice de la primera columna del bloque anual.
+ * @returns Índices absolutos de las columnas de nombre, importe, comentario y total.
  */
 function crearColumnasViaje(
   headers: unknown[],
@@ -87,6 +92,10 @@ function crearColumnasViaje(
 /**
  * Busca una fórmula SUM en la columna Total que no pertenezca a un viaje ni a un gasto.
  * Devuelve esa fila como límite del bloque o lanza error si no encuentra el total.
+ * @param rows Filas de valores de la hoja.
+ * @param formulas Fórmulas de las celdas, alineadas con las filas de valores.
+ * @param columnas Índices de las columnas del bloque de viajes.
+ * @returns Índice de la fila que contiene el total anual; lanza un error si falta.
  */
 function encontrarFilaTotalAnual(
   rows: unknown[][],
@@ -98,8 +107,7 @@ function encontrarFilaTotalAnual(
     const nombreViaje = Utils.readText(rows[rowIndex][columnas.nombre]);
     const importe = rows[rowIndex][columnas.importe];
     const comentario = Utils.readText(rows[rowIndex][columnas.comentario]);
-    const tieneDetalle = importe !== "" && importe !== null && importe !== undefined
-      || comentario !== null;
+    const tieneDetalle = Utils.readText(importe) !== null || comentario !== null;
     if (
       /^=SUM\(/i.test(formula) &&
       nombreViaje === null &&
@@ -117,6 +125,11 @@ function encontrarFilaTotalAnual(
  * Crea un viaje al encontrar su nombre y añade los gastos de las filas siguientes.
  * Las celdas combinadas dejan el nombre vacío en filas posteriores, que continúan
  * asociándose al viaje actual; un gasto sin viaje se considera un error.
+ * @param rows Filas de valores de la hoja.
+ * @param notes Notas asociadas a las celdas de cada fila.
+ * @param columnas Índices de las columnas del bloque de viajes.
+ * @param totalRowIndex Índice de la fila que cierra los datos de ese año.
+ * @returns Lista de viajes y sus gastos hasta la fila de total anual.
  */
 function crearViajesDelAño(
   rows: unknown[][],

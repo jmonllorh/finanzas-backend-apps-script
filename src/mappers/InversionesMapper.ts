@@ -29,6 +29,8 @@ const COLUMNAS_INVERSIONES = {
 /**
  * Valida la estructura de columnas y crea los bloques de fondos y depósitos.
  * Lee valores y notas juntos para conservar las anotaciones en el DTO resultante.
+ * @param sheet Hoja de cálculo que contiene fondos y depósitos.
+ * @returns DTO con los registros de fondos, sus totales y los depósitos.
  */
 function crearInversionesDTO(
   sheet: GoogleAppsScript.Spreadsheet.Sheet
@@ -88,6 +90,10 @@ function crearInversionesDTO(
 /**
  * Recorre las filas desde el primer registro, omite fechas vacías y exige fechas válidas.
  * Para cada fila crea bancos, fondos, renta variable y el activo Total del agregado.
+ * @param rows Filas de valores de la hoja de inversiones.
+ * @param notes Notas asociadas a las celdas de cada fila.
+ * @param primeraFilaMensual Índice de la primera fila que puede contener un registro mensual.
+ * @returns Registros mensuales de fondos con sus activos y valores de vivienda.
  */
 function crearRegistrosMensualesFondo(
   rows: unknown[][],
@@ -98,7 +104,7 @@ function crearRegistrosMensualesFondo(
   for (let rowIndex = primeraFilaMensual; rowIndex < rows.length; rowIndex++) {
     const row = rows[rowIndex];
     const fechaValue = row[COLUMNAS_INVERSIONES.fecha.indice];
-    if (fechaValue === "" || fechaValue === null || fechaValue === undefined) {
+    if (Utils.readText(fechaValue) === null) {
       continue;
     }
 
@@ -166,13 +172,15 @@ function crearRegistrosMensualesFondo(
 /**
  * Busca desde la primera fila de datos la primera celda no vacía de Fecha.
  * Devuelve su índice si contiene una fecha válida; falla ante fechas inválidas o ausentes.
+ * @param rows Filas de valores de la hoja de inversiones.
+ * @returns Índice de la primera fila con una fecha mensual válida.
  */
 function encontrarPrimeraFilaMensual(
   rows: unknown[][]
 ): number {
   for (let rowIndex = 2; rowIndex < rows.length; rowIndex++) {
     const value = rows[rowIndex][COLUMNAS_INVERSIONES.fecha.indice];
-    if (value === "" || value === null || value === undefined) {
+    if (Utils.readText(value) === null) {
       continue;
     }
     if (Utils.readDate(value) === null) {
@@ -186,6 +194,8 @@ function encontrarPrimeraFilaMensual(
 /**
  * Compara los encabezados de la hoja con los nombres definidos junto a cada índice.
  * Normaliza acentos y mayúsculas; informa la posición esperada si detecta cambios.
+ * @param headers Valores de la fila de encabezados que se van a validar.
+ * @returns No devuelve valor; lanza un error si algún encabezado no coincide.
  */
 function validarEncabezadosInversiones(headers: unknown[]): void {
   for (const { indice, encabezado } of Object.values(COLUMNAS_INVERSIONES)) {
@@ -204,6 +214,11 @@ function validarEncabezadosInversiones(headers: unknown[]): void {
 /**
  * Mapea el valor principal y los campos disponibles para el tipo de activo.
  * Los campos sin columna configurada se representan como null, no como wrappers vacíos.
+ * @param tipo Tipo de activo que identifica el registro.
+ * @param row Fila de valores del registro mensual.
+ * @param notes Notas asociadas a las celdas de la fila.
+ * @param columnas Índices de las columnas disponibles para este activo.
+ * @returns DTO del activo con sus valores y notas configurados.
  */
 function crearActivoFondo(
   tipo: TipoActivoValue,
@@ -246,6 +261,9 @@ function crearActivoFondo(
 /**
  * Construye los totales de bancos, fondos, rentas y el activo Total del agregado.
  * Localiza los valores por etiqueta en las columnas resumen, sin fijar la fila concreta.
+ * @param rows Filas de valores usadas para localizar las etiquetas y los totales.
+ * @param notes Notas asociadas a las celdas de la hoja.
+ * @returns Totales de cada tipo de activo, incluido el total agregado.
  */
 function crearTotalesFondo(
   rows: unknown[][],
@@ -316,6 +334,11 @@ function crearTotalesFondo(
 /**
  * Asigna al DTO el tipo de activo y sus valores de valor, beneficio y ganancia.
  * Beneficio y ganancia son opcionales para activos que no tienen esos datos.
+ * @param tipo Tipo de activo al que corresponden los valores.
+ * @param valor Valor total del activo y su nota.
+ * @param beneficio Beneficio del activo y su nota, o null si no aplica.
+ * @param ganancia Porcentaje de ganancia y su nota, o null si no aplica.
+ * @returns DTO con los valores y notas del total del activo.
  */
 function crearTotalFondo(
   tipo: TipoActivoValue,
@@ -342,6 +365,12 @@ function crearTotalFondo(
 /**
  * Busca el valor numérico que sigue a una etiqueta en una columna y conserva su nota.
  * Si percentage es true, convierte la fracción a porcentaje.
+ * @param rows Filas de valores en las que buscar la etiqueta y el valor asociado.
+ * @param notes Notas asociadas a las celdas de la hoja.
+ * @param columnIndex Índice de la columna que contiene la etiqueta y su valor.
+ * @param label Etiqueta que precede al valor que se quiere leer.
+ * @param percentage Indica si el valor leído debe convertirse de fracción a porcentaje.
+ * @returns Tupla con el valor numérico encontrado y su nota opcional.
  */
 function leerValorDebajoEtiqueta(
   rows: unknown[][],
@@ -369,6 +398,10 @@ function leerValorDebajoEtiqueta(
 /**
  * Encuentra la etiqueta en la columna indicada y avanza hasta la primera celda numérica.
  * Así admite filas vacías entre etiqueta y valor; falla si no hay un número posterior.
+ * @param rows Filas de valores de la hoja.
+ * @param columnIndex Índice de la columna en la que buscar.
+ * @param label Etiqueta cuya siguiente celda numérica se desea localizar.
+ * @returns Índice de la primera fila posterior que contiene un número válido.
  */
 function encontrarFilaSiguienteValor(
   rows: unknown[][],
@@ -393,6 +426,9 @@ function encontrarFilaSiguienteValor(
 /**
  * Lee las filas con entidad como depósitos, excluyendo las etiquetas de deuda y total.
  * Exige fechas de inicio/vencimiento y estado Sí/No antes de construir cada DTO.
+ * @param rows Filas de valores de la hoja de inversiones.
+ * @param notes Notas asociadas a las celdas de cada fila.
+ * @returns Depósitos encontrados con importes, fechas, intereses y estado.
  */
 function crearDepositos(
   rows: unknown[][],

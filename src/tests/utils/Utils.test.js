@@ -25,11 +25,13 @@ class UtilsTests {
 
 const utilsTests = new UtilsTests();
 
-test("UtilsTests - readText conserva texto, convierte otros valores y normaliza vacíos", () => {
+test("UtilsTests - readText recorta texto, convierte otros valores y normaliza vacíos", () => {
   assert.equal(utilsTests.evaluate("Utils.readText('comentario')"), "comentario");
+  assert.equal(utilsTests.evaluate("Utils.readText('  comentario  ')"), "comentario");
   assert.equal(utilsTests.evaluate("Utils.readText(42)"), "42");
   assert.equal(utilsTests.evaluate("Utils.readText(false)"), "false");
   assert.equal(utilsTests.evaluate("Utils.readText('')"), null);
+  assert.equal(utilsTests.evaluate("Utils.readText('   ')"), null);
   assert.equal(utilsTests.evaluate("Utils.readText(null)"), null);
   assert.equal(utilsTests.evaluate("Utils.readText(undefined)"), null);
 });

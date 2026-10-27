@@ -1,11 +1,31 @@
 /**
  * Función de entrada para peticiones HTTP GET.
  * @param e Objeto de evento HTTP proporcionado por Apps Script.
+ * @returns Respuesta JSON con los datos financieros disponibles en la hoja de cálculo.
  */
+// TODO- Añadir .md con la definición funcional del servicio, explicando cada campo de la respuesta, sus valores posibles, la unidad de medida de cada valor, etc
+// TODO- Cambiar nombre métodos, clases y ficheros a inglés
 function doGet(e: GoogleAppsScript.Events.DoGet): GoogleAppsScript.Content.TextOutput {
-  const spreadsheetId: string = "1OeaXm9POWakuXQc6yRH41gyydXI3J2YqhUczMC_2tSk";
+  let spreadsheetId: string | null;
+  try {
+    spreadsheetId = PropertiesService
+      .getScriptProperties()
+      .getProperty("SPREADSHEET_ID");
+  } catch (error) {
+    Logger.log(error);
+    return crearRespuestaError(
+      "No se pudo leer la propiedad SPREADSHEET_ID de Script Properties."
+    );
+  }
+  if (spreadsheetId === null || spreadsheetId.trim() === "") {
+    return crearRespuestaError(
+      "La propiedad SPREADSHEET_ID de Script Properties no está configurada o está vacía."
+    );
+  }
 
-  const ss: GoogleAppsScript.Spreadsheet.Spreadsheet = SpreadsheetApp.openById(spreadsheetId);
+  const ss: GoogleAppsScript.Spreadsheet.Spreadsheet = SpreadsheetApp.openById(
+    spreadsheetId.trim()
+  );
 
   const sheetEvolucionSalario = ss.getSheetByName("Evolución salario");
   const sheetComidaLimpieza = ss.getSheetByName("Comida/Limpieza");
@@ -65,6 +85,22 @@ function doGet(e: GoogleAppsScript.Events.DoGet): GoogleAppsScript.Content.TextO
     ? crearDesgloseTotalDTO(sheetDesgloseTotal)
     : null;
 
+  return ContentService
+    .createTextOutput(JSON.stringify(response))
+    .setMimeType(ContentService.MimeType.JSON);
+}
+
+/**
+ * Crea una respuesta JSON de error compatible con el formato común de la API.
+ * @param message Descripción del error que recibirá el consumidor del servicio.
+ * @returns Respuesta HTTP con estado de error y mensaje en formato JSON.
+ */
+function crearRespuestaError(
+  message: string
+): GoogleAppsScript.Content.TextOutput {
+  const response = new RespuestaFinancieraDTO();
+  response.status = "error";
+  response.message = message;
   return ContentService
     .createTextOutput(JSON.stringify(response))
     .setMimeType(ContentService.MimeType.JSON);

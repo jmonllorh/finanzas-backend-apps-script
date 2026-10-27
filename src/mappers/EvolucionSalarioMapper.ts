@@ -10,6 +10,8 @@ interface ColumnasEvolucionSalario {
 /**
  * Lee los encabezados una vez, obtiene sus índices y procesa cada fila salarial.
  * Descarta filas completamente vacías y conserva las notas asociadas a los campos.
+ * @param sheet Hoja de cálculo con los registros de evolución salarial.
+ * @returns Lista de DTO salariales para las filas con datos.
  */
 function crearEvolucionSalarioDTOs(
   sheet: GoogleAppsScript.Spreadsheet.Sheet
@@ -27,7 +29,7 @@ function crearEvolucionSalarioDTOs(
   const result: EvolucionSalarioDTO[] = [];
   for (let rowIndex = 1; rowIndex < rows.length; rowIndex++) {
     const row = rows[rowIndex];
-    if (row.every((value) => value === "" || value === null)) {
+    if (row.every((value) => Utils.readText(value) === null)) {
       continue;
     }
 
@@ -40,6 +42,8 @@ function crearEvolucionSalarioDTOs(
 /**
  * Resuelve por nombre las columnas obligatorias de salario y comentarios.
  * Si falta un encabezado, Utils.findColumn informa del error.
+ * @param headers Encabezados de la hoja en el orden de sus columnas.
+ * @returns Índices de las columnas necesarias para mapear cada registro salarial.
  */
 function crearColumnasEvolucionSalario(
   headers: string[]
@@ -57,6 +61,10 @@ function crearColumnasEvolucionSalario(
 /**
  * Convierte una fila en EvolucionSalarioDTO usando los índices previamente resueltos.
  * Los incrementos se expresan como porcentajes y el resto de importes en euros.
+ * @param row Valores de una fila de datos salariales.
+ * @param notas Notas asociadas a las celdas de la fila.
+ * @param columns Índices de las columnas salariales resueltos desde los encabezados.
+ * @returns DTO con los datos salariales y sus notas.
  */
 function crearEvolucionSalarioDTODesdeFila(
   row: unknown[],
