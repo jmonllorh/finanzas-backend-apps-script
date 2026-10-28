@@ -3,4 +3,4 @@ node_modules/
 # Código compilado y de despliegue local
 dist/
 .clasp.json
-*.xlsx
+assets/
