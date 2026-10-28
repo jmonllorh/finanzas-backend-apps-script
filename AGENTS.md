@@ -17,3 +17,4 @@ Para cualquier solicitud sobre datos o modelos de este proyecto:
 - No modifiques el fichero fuente salvo que el usuario lo solicite explícitamente.
 - Añade comentarios descriptivos en español a los nuevos métodos que crees.
 - Cuando cambie el contrato de datos, actualiza `docs/service-contract.md` si el cambio es relevante para el equipo front (campos, tipos, unidades, valores posibles, estructura o gestión de respuestas). No es necesario documentar cambios internos que no afecten a su consumo.
+- Si un cambio afecta de forma relevante a la descripción, configuración, desarrollo, pruebas o despliegue del proyecto, actualiza los README en español (`README.md`) e inglés (`README.en.md`) para mantenerlos sincronizados.
