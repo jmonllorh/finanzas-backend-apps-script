@@ -16,3 +16,4 @@ Para cualquier solicitud sobre datos o modelos de este proyecto:
 - No inventes ni completes información que no esté respaldada por el fichero. Si falta información o hay ambigüedades, indícalo claramente.
 - No modifiques el fichero fuente salvo que el usuario lo solicite explícitamente.
 - Añade comentarios descriptivos en español a los nuevos métodos que crees.
+- Cuando cambie el contrato de datos, actualiza `docs/service-contract.md` si el cambio es relevante para el equipo front (campos, tipos, unidades, valores posibles, estructura o gestión de respuestas). No es necesario documentar cambios internos que no afecten a su consumo.
