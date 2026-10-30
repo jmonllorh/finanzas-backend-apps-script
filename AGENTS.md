@@ -12,6 +12,7 @@ Para cualquier solicitud sobre datos o modelos de este proyecto:
 - `assets/response.json` representa un ejemplo de respuesta del servicio.
 - Modela todas las pestañas del fichero excepto `Estimacion ahorro`, `Alquiler conjunto`, `Estimación agua`, `Cálculo nóminas` y `Previsión inicial`. De cada pestaña restante, incluye todos sus campos.
 - Todo el código se creará dentro de la carpeta src
+- Todo el código se creará en inglés: nombres de archivos, clases, métodos, variables y campos de los modelos y de la respuesta del servicio. Las etiquetas del Excel se conservarán en su idioma original para leer la fuente de datos; los comentarios descriptivos seguirán en español.
 - Consulta el contenido del fichero antes de responder o implementar cambios relacionados con los datos.
 - No inventes ni completes información que no esté respaldada por el fichero. Si falta información o hay ambigüedades, indícalo claramente.
 - No modifiques el fichero fuente salvo que el usuario lo solicite explícitamente.

@@ -5,6 +5,8 @@ class FinancialSummaryFieldsDTO {
   electricityNote?: string;
   water!: number | null;
   waterNote?: string;
+  gas!: number | null;
+  gasNote?: string;
   internet!: number | null;
   internetNote?: string;
   investments!: number | null;

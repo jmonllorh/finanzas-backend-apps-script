@@ -9,6 +9,7 @@ class FinancialResponseDTO {
   otherExpenses!: ExpenseCategoryDTO[] | null;
   electricity!: ElectricityDTO[] | null;
   water!: WaterDTO[] | null;
+  gas!: GasDTO[] | null;
   travel!: TravelDTO[] | null;
   investments!: InvestmentsDTO | null;
   fundAllocations!: FundAllocationDTO[] | null;

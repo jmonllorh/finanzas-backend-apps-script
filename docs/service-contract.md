@@ -33,6 +33,7 @@ Accept: application/json
   "otherExpenses": [],
   "electricity": [],
   "water": [],
+  "gas": [],
   "travel": [],
   "investments": null,
   "fundAllocations": [],
@@ -82,6 +83,7 @@ La respuesta contiene estas propiedades:
 | `otherExpenses` | lista o `null` | Gastos de Otros por año y mes. |
 | `electricity` | lista o `null` | Importes, consumo y precios mensuales de electricidad. |
 | `water` | lista o `null` | Importes, consumo y precio por litro de agua. |
+| `gas` | lista `GasDTO` o `null` | Importes, consumo y precios mensuales de la pestaña Gas. |
 | `travel` | lista o `null` | Viajes, gastos y totales por año. |
 | `investments` | objeto o `null` | Registros y totales de fondos y depósitos. |
 | `fundAllocations` | lista o `null` | Distribución objetivo de fondos. |
@@ -96,6 +98,7 @@ La respuesta contiene estas propiedades:
 | `rent` | Alquiler. |
 | `electricity` | Gasto de electricidad. |
 | `water` | Gasto de agua. |
+| `gas` | Gasto de gas. |
 | `internet` | Gasto de Internet. |
 | `investments` | Importe de inversiones registrado en el resumen. |
 | `subscriptions` | Suscripciones. |
@@ -198,6 +201,26 @@ Cada elemento corresponde a un año.
 | `months[].consumptionNote` | texto opcional | Nota del consumo. |
 | `months[].pricePerLiter` | número o `null`, `€/L` | Precio por litro, unidad indicada expresamente por la hoja. |
 | `months[].pricePerLiterNote` | texto opcional | Nota del precio por litro. |
+
+### `gas`
+
+Cada elemento corresponde a un año de la pestaña `Gas` y contiene los doce meses, incluidos los que solo tienen ceros. Si la pestaña no existe, `gas` es `null`.
+
+| Campo | Tipo/unidad | Descripción |
+|---|---|---|
+| `year` | entero, año | Año del bloque. |
+| `months[].month` | `Month` | Mes; valores descritos en [Enumeraciones](#enumeraciones). |
+| `months[].amount` | número o `null`, `€` | Importe total. |
+| `months[].amountNote` | texto opcional | Nota del importe total. |
+| `months[].consumption` | número o `null`, `kWh` | Consumo total. |
+| `months[].consumptionNote` | texto opcional | Nota del consumo total. |
+| `months[].price` | `GasPriceDTO` | Precios asociados al mes. |
+| `months[].price.fixedPrice` | número o `null`, `€` | Precio fijo, sin inferir una tarifa diaria ni otro periodo. |
+| `months[].price.fixedPriceNote` | texto opcional | Nota del precio fijo. |
+| `months[].price.energyPrice` | número o `null`, `€/kWh` | Precio de energía, conservando la precisión de la celda. |
+| `months[].price.energyPriceNote` | texto opcional | Nota del precio de energía. |
+
+El importe total, el consumo y el precio fijo se redondean a dos decimales, siguiendo las convenciones de los mappers existentes. Las celdas vacías se representan con `null`; las notas vacías se omiten.
 
 ### `travel`
 

@@ -34,6 +34,7 @@ function doGet(e: GoogleAppsScript.Events.DoGet): GoogleAppsScript.Content.TextO
   const sheetOtherExpenses = ss.getSheetByName("Otros");
   const sheetElectricity = ss.getSheetByName("Electricidad");
   const sheetWater = ss.getSheetByName("Agua");
+  const sheetGas = ss.getSheetByName("Gas");
   const sheetTravel = ss.getSheetByName("Viajes");
   const sheetInvestments = ss.getSheetByName("Inversiones");
   const sheetFundAllocations = ss.getSheetByName("MyInvestor");
@@ -70,6 +71,9 @@ function doGet(e: GoogleAppsScript.Events.DoGet): GoogleAppsScript.Content.TextO
     : null;
   response.water = sheetWater
     ? mapWaterData(sheetWater)
+    : null;
+  response.gas = sheetGas
+    ? mapGasData(sheetGas)
     : null;
   response.travel = sheetTravel
     ? mapTravelData(sheetTravel)

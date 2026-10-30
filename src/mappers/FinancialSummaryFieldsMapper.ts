@@ -1,6 +1,7 @@
 /**
  * Localiza cada campo financiero por el encabezado de la hoja y devuelve sus valores y notas.
- * Internet puede faltar en hojas antiguas; «Total gastos» se acepta como alias del encabezado común.
+ * Gas e Internet ausentes se representan con cero en hojas antiguas.
+ * «Total gastos» se acepta como alias del encabezado común.
  * @param headers Encabezados de las columnas financieras.
  * @param row Fila de valores financieros que se va a convertir.
  * @param notes Notas asociadas a las celdas de la fila.
@@ -44,6 +45,7 @@ function mapFinancialSummaryFields(
   [dto.rent, dto.rentNote] = readField("Alquiler");
   [dto.electricity, dto.electricityNote] = readField("Electricidad");
   [dto.water, dto.waterNote] = readField("Agua");
+  [dto.gas, dto.gasNote] = readField("Gas", true);
   [dto.internet, dto.internetNote] = readField("Internet", true);
   [dto.investments, dto.investmentsNote] = readField("Inversiones");
   [dto.subscriptions, dto.subscriptionsNote] = readField("Suscripciones");

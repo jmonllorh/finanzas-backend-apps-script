@@ -78,6 +78,7 @@ test("AnnualSummaryMapperTests - maps months, totals, and additional columns", (
       rentNote: "Nota del alquiler",
       electricity: 2,
       water: 3,
+      gas: 0,
       internet: 4,
       investments: 5,
       subscriptions: 6,
@@ -109,6 +110,10 @@ test("AnnualSummaryMapperTests - fills missing fields with zero in older years",
   assert.equal(dto.year, 2025);
   assert.equal(dto.months[0].internet, 0);
   assert.equal(dto.months[0].internetNote, undefined);
+  assert.equal(dto.months[0].gas, 0);
+  assert.equal(dto.months[0].gasNote, undefined);
+  assert.equal(dto.total.gas, 0);
+  assert.equal(dto.monthlyAverage.gas, 0);
 });
 
 test("AnnualSummaryMapperTests - preserves null when Internet exists but is empty", () => {
